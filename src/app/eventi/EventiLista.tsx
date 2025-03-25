@@ -13,6 +13,7 @@ type Evento = {
   location: string;
   stato: string;
   max_partecipanti: number;
+  passato?: boolean;
 };
 
 export default function EventiLista() {
@@ -25,6 +26,7 @@ export default function EventiLista() {
   const [searchTerm, setSearchTerm] = useState('');
   const [statoFilter, setStatoFilter] = useState('');
   const [dataFilter, setDataFilter] = useState('');
+  const [tempoFilter, setTempoFilter] = useState('tutti'); // 'futuri', 'passati', 'tutti'
 
   useEffect(() => {
     fetchEventi();
@@ -34,27 +36,40 @@ export default function EventiLista() {
   const fetchEventi = async () => {
     setLoading(true);
     try {
+      // Recupera tutti gli eventi ordinati per data
       const { data, error } = await supabaseClient
         .from('feste')
         .select('*')
-        .order('data_inizio', { ascending: true });
+        .order('data_inizio', { ascending: false }); // Ordine decrescente per avere i più recenti prima
 
       if (error) throw error;
       
-      // Mappa i campi dal database ai nomi utilizzati nel frontend
-      const eventiMappati = data?.map(evento => ({
-        id: evento.id,
-        titolo: evento.nome || '',
-        descrizione: evento.descrizione || '',
-        data_inizio: evento.data_inizio || '',
-        data_fine: evento.data_fine || '',
-        location: evento.luogo || '',
-        stato: evento.stato || '',
-        max_partecipanti: evento.max_partecipanti || 0,
-      })) || [];
+      const now = new Date().toISOString();
       
-      setEventi(eventiMappati);
-      setEventiMostrati(eventiMappati);
+      // Mappa i campi dal database ai nomi utilizzati nel frontend
+      const eventiMappati = data?.map(evento => {
+        const isPassato = evento.data_inizio < now;
+        return {
+          id: evento.id,
+          titolo: evento.nome || '',
+          descrizione: evento.descrizione || '',
+          data_inizio: evento.data_inizio || '',
+          data_fine: evento.data_fine || '',
+          location: evento.luogo || '',
+          stato: evento.stato || '',
+          max_partecipanti: evento.max_partecipanti || 0,
+          passato: isPassato,
+        };
+      }) || [];
+      
+      // Ordina gli eventi: prima i futuri (in ordine crescente), poi i passati (in ordine decrescente)
+      const eventiOrdinati = [
+        ...eventiMappati.filter(e => !e.passato).sort((a, b) => new Date(a.data_inizio).getTime() - new Date(b.data_inizio).getTime()),
+        ...eventiMappati.filter(e => e.passato)
+      ];
+      
+      setEventi(eventiOrdinati);
+      setEventiMostrati(eventiOrdinati);
     } catch (err: any) {
       console.error('Errore durante il recupero degli eventi:', err);
       setError('Si è verificato un errore durante il recupero degli eventi.');
@@ -66,6 +81,13 @@ export default function EventiLista() {
   // Applica i filtri agli eventi
   useEffect(() => {
     let risultatiFiltrati = eventi;
+    
+    // Filtro per tempo (futuro/passato)
+    if (tempoFilter !== 'tutti') {
+      risultatiFiltrati = risultatiFiltrati.filter(evento => 
+        tempoFilter === 'futuri' ? !evento.passato : evento.passato
+      );
+    }
     
     // Filtro per termine di ricerca (titolo, descrizione, location)
     if (searchTerm) {
@@ -104,7 +126,7 @@ export default function EventiLista() {
     }
     
     setEventiMostrati(risultatiFiltrati);
-  }, [eventi, searchTerm, statoFilter, dataFilter]);
+  }, [eventi, searchTerm, statoFilter, dataFilter, tempoFilter]);
 
   // Formatta la data in formato leggibile
   const formatData = (dataString: string) => {
@@ -204,12 +226,29 @@ export default function EventiLista() {
               />
             </div>
             
+            <div className="md:w-48">
+              <label htmlFor="tempo" className="block text-sm font-medium text-slate-700 mb-1">
+                Tempo
+              </label>
+              <select
+                id="tempo"
+                value={tempoFilter}
+                onChange={(e) => setTempoFilter(e.target.value)}
+                className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
+              >
+                <option value="tutti">Tutti</option>
+                <option value="futuri">Futuri</option>
+                <option value="passati">Passati</option>
+              </select>
+            </div>
+            
             <div className="md:w-40 self-end">
               <button
                 onClick={() => {
                   setSearchTerm('');
                   setStatoFilter('');
                   setDataFilter('');
+                  setTempoFilter('tutti');
                 }}
                 className="w-full px-4 py-2 bg-slate-100 text-slate-700 rounded-lg hover:bg-slate-200 transition-colors"
               >
@@ -237,6 +276,7 @@ export default function EventiLista() {
                 setSearchTerm('');
                 setStatoFilter('');
                 setDataFilter('');
+                setTempoFilter('tutti');
               }}
               className="mt-4 px-4 py-2 bg-orange-500 text-white rounded-lg hover:bg-orange-600 transition-colors"
             >
@@ -247,14 +287,14 @@ export default function EventiLista() {
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
             {eventiMostrati.map(evento => (
               <div key={evento.id} className="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transition-all">
-                <div className="h-40 bg-orange-100 flex items-center justify-center">
-                  <span className="text-6xl">🎉</span>
+                <div className={`h-40 ${evento.passato ? 'bg-slate-100' : 'bg-orange-100'} flex items-center justify-center`}>
+                  <span className="text-6xl">{evento.passato ? '🏆' : '🎉'}</span>
                 </div>
                 <div className="p-6">
                   <div className="flex justify-between items-start mb-3">
                     <h2 className="text-xl font-bold text-slate-900">{evento.titolo}</h2>
-                    <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getStatoBadgeClass(evento.stato)}`}>
-                      {getStatoTesto(evento.stato)}
+                    <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${evento.passato ? 'bg-gray-100 text-gray-800' : getStatoBadgeClass(evento.stato)}`}>
+                      {evento.passato ? 'Concluso' : getStatoTesto(evento.stato)}
                     </span>
                   </div>
                   
@@ -280,9 +320,9 @@ export default function EventiLista() {
                   
                   <div className="flex space-x-3">
                     <Link href={`/eventi/${evento.id}`} className="flex-1 inline-block text-center px-4 py-2 bg-orange-500 text-white font-medium rounded-lg shadow-sm hover:bg-orange-600 transition-all">
-                      Dettagli
+                      {evento.passato ? 'Scopri come è stato' : 'Dettagli'}
                     </Link>
-                    {evento.stato === 'pianificata' && (
+                    {!evento.passato && evento.stato === 'pianificata' && (
                       <Link href={`/eventi/${evento.id}`} className="flex-1 inline-block text-center px-4 py-2 bg-white text-orange-500 font-medium border border-orange-200 rounded-lg shadow-sm hover:bg-orange-50 transition-all">
                         Partecipa
                       </Link>

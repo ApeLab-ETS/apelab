@@ -12,6 +12,7 @@ type Evento = {
   data_fine: string;
   location: string;
   stato: string;
+  passato?: boolean;
 };
 
 export default function Home() {
@@ -24,29 +25,59 @@ export default function Home() {
       setLoading(true);
       try {
         // Recupera gli eventi futuri ordinati per data
-        const { data, error } = await supabaseClient
+        const { data: eventiFuturi, error: errorFuturi } = await supabaseClient
           .from('feste')
           .select('*')
           .gte('data_inizio', new Date().toISOString())
           .order('data_inizio', { ascending: true });
 
-        if (error) throw error;
+        if (errorFuturi) throw errorFuturi;
 
-        // Mappa i campi dal database ai nomi utilizzati nel frontend
-        const eventiMappati = data?.map(evento => ({
-          id: evento.id,
-          titolo: evento.nome || '',
-          descrizione: evento.descrizione || '',
-          data_inizio: evento.data_inizio || '',
-          data_fine: evento.data_fine || '',
-          location: evento.luogo || '',
-          stato: evento.stato || '',
-        })) || [];
+        // Se non ci sono eventi futuri, recupera gli eventi passati più recenti
+        if (!eventiFuturi || eventiFuturi.length === 0) {
+          const { data: eventiPassati, error: errorPassati } = await supabaseClient
+            .from('feste')
+            .select('*')
+            .lt('data_inizio', new Date().toISOString())
+            .order('data_inizio', { ascending: false }) // Ordine decrescente per ottenere i più recenti
+            .limit(3); // Limitiamo a 3 eventi
 
-        // Il primo evento è quello in evidenza
-        if (eventiMappati.length > 0) {
-          setEventoInEvidenza(eventiMappati[0]);
-          setProssimiEventi(eventiMappati.slice(0, 3)); // Primi 3 eventi
+          if (errorPassati) throw errorPassati;
+
+          // Mappa i campi dal database ai nomi utilizzati nel frontend per eventi passati
+          const eventiPassatiMappati = eventiPassati?.map(evento => ({
+            id: evento.id,
+            titolo: evento.nome || '',
+            descrizione: evento.descrizione || '',
+            data_inizio: evento.data_inizio || '',
+            data_fine: evento.data_fine || '',
+            location: evento.luogo || '',
+            stato: evento.stato || '',
+            passato: true, // Aggiungiamo un flag per indicare che è un evento passato
+          })) || [];
+
+          if (eventiPassatiMappati.length > 0) {
+            setEventoInEvidenza(eventiPassatiMappati[0]);
+            setProssimiEventi(eventiPassatiMappati); // Tutti gli eventi passati (massimo 3)
+          }
+        } else {
+          // Mappa i campi dal database ai nomi utilizzati nel frontend per eventi futuri
+          const eventiFuturiMappati = eventiFuturi?.map(evento => ({
+            id: evento.id,
+            titolo: evento.nome || '',
+            descrizione: evento.descrizione || '',
+            data_inizio: evento.data_inizio || '',
+            data_fine: evento.data_fine || '',
+            location: evento.luogo || '',
+            stato: evento.stato || '',
+            passato: false,
+          })) || [];
+
+          // Il primo evento è quello in evidenza
+          if (eventiFuturiMappati.length > 0) {
+            setEventoInEvidenza(eventiFuturiMappati[0]);
+            setProssimiEventi(eventiFuturiMappati.slice(0, 3)); // Primi 3 eventi
+          }
         }
       } catch (err) {
         console.error('Errore durante il recupero degli eventi:', err);
@@ -75,7 +106,10 @@ export default function Home() {
       {eventoInEvidenza && (
         <div className="bg-gradient-to-r from-orange-500 to-orange-600 text-white py-3 text-center">
           <div className="container mx-auto px-4 flex justify-center items-center">
-            <p className="font-medium inline-block">🎉 Prossimo evento: <span className="font-bold">{eventoInEvidenza.titolo}</span> - {formatData(eventoInEvidenza.data_inizio)}</p>
+            <p className="font-medium inline-block">
+              {eventoInEvidenza.passato ? '🏆 Evento recente: ' : '🎉 Prossimo evento: '}
+              <span className="font-bold">{eventoInEvidenza.titolo}</span> - {formatData(eventoInEvidenza.data_inizio)}
+            </p>
           </div>
         </div>
       )}
@@ -183,7 +217,7 @@ export default function Home() {
         {prossimiEventi.length > 0 && (
           <div className="max-w-6xl mx-auto mb-20">
             <h2 className="text-3xl font-bold text-center mb-12 text-slate-900">
-              Prossimi Eventi
+              {prossimiEventi[0].passato ? 'Eventi Recenti' : 'Prossimi Eventi'}
             </h2>
             
             <div className="grid md:grid-cols-3 gap-8">
@@ -197,13 +231,14 @@ export default function Home() {
                     <div className="flex flex-col space-y-2 mb-4 text-sm text-slate-600">
                       <div className="flex items-center">
                         <span className="mr-2">📅</span> {formatData(evento.data_inizio)}
+                        {evento.passato && <span className="ml-2 text-xs bg-gray-100 text-gray-800 px-2 py-0.5 rounded-full">Concluso</span>}
                       </div>
                       <div className="flex items-center">
                         <span className="mr-2">📍</span> {evento.location}
                       </div>
                     </div>
                     <Link href={`/eventi/${evento.id}`} className="inline-block w-full text-center px-4 py-2 bg-orange-500 text-white font-medium rounded-lg shadow-sm hover:bg-orange-600 transition-all">
-                      Dettagli
+                      {evento.passato ? 'Scopri come è stato' : 'Dettagli'}
                     </Link>
                   </div>
                 </div>
