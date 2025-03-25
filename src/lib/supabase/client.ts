@@ -7,6 +7,8 @@ export const supabaseClient = createBrowserClient(
 );
 
 // Tipi per il database
+// Nota: Il nome della tabella nel database è 'utenti', ma manteniamo il tipo 'Profile' 
+// per compatibilità con il codice esistente
 export type Profile = {
   id: string;
   email: string;
@@ -14,7 +16,7 @@ export type Profile = {
   cognome: string;
   ruolo: 'admin' | 'organizzatore' | 'utente';
   telefono: string;
-  avatar_url: string;
+  avatar_url?: string; // Campo opzionale
   created_at: string;
 };
 

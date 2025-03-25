@@ -26,12 +26,13 @@ export default function AdminLayout({
 
       // Verifica se l'utente è admin
       const { data: profile, error } = await supabaseClient
-        .from('profiles')
+        .from('utenti')
         .select('ruolo')
         .eq('id', session.user.id)
         .single();
 
       if (error || !profile || profile.ruolo !== 'admin') {
+        console.log('Errore o non admin:', { error, profile });
         router.push('/');
         return;
       }

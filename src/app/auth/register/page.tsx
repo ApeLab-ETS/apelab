@@ -76,11 +76,13 @@ export default function RegisterPage() {
         return;
       }
 
+      console.log('Autenticazione completata, dati utente:', authData);
+
       // 2. Inserisci i dati aggiuntivi nella tabella profili se necessario
       // Nota: in molti casi questo passo è gestito da un trigger in Supabase
-      if (authData.user) {
+      if (authData?.user) {
         const { error: profileError } = await supabaseClient
-          .from('profiles')
+          .from('utenti')  // Modificato da 'profiles' a 'utenti'
           .upsert({
             id: authData.user.id,
             email: formData.email,
@@ -94,6 +96,8 @@ export default function RegisterPage() {
         if (profileError) {
           console.error("Errore nell'inserimento del profilo:", profileError);
           // La registrazione è comunque avvenuta, quindi non blocchiamo il processo
+        } else {
+          console.log('Profilo utente inserito con successo nella tabella utenti');
         }
       }
 

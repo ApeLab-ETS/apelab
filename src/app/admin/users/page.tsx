@@ -27,6 +27,7 @@ export default function UsersAdminPage() {
     const checkAuth = async () => {
       const { data: { session } } = await supabaseClient.auth.getSession();
       setSession(session);
+      console.log('Sessione utente:', session);
 
       if (!session) {
         router.push('/auth/login?next=/admin/users');
@@ -35,12 +36,15 @@ export default function UsersAdminPage() {
 
       // Ottieni il profilo dell'utente per verificare il ruolo
       const { data: profile, error } = await supabaseClient
-        .from('profiles')
+        .from('utenti')  // Modificato da 'profiles' a 'utenti'
         .select('*')
         .eq('id', session.user.id)
         .single();
 
+      console.log('Profilo utente:', profile, 'Errore:', error);
+
       if (error || !profile || profile.ruolo !== 'admin') {
+        console.log('Non autorizzato - reindirizzamento alla home');
         router.push('/');
         return;
       }
@@ -57,11 +61,12 @@ export default function UsersAdminPage() {
     setLoading(true);
     try {
       const { data, error } = await supabaseClient
-        .from('profiles')
+        .from('utenti')  // Modificato da 'profiles' a 'utenti'
         .select('*')
         .order('created_at', { ascending: false });
 
       if (error) throw error;
+      console.log('Utenti caricati:', data);
       setUsers(data || []);
     } catch (err: any) {
       console.error('Errore durante il recupero degli utenti:', err);
@@ -82,7 +87,7 @@ export default function UsersAdminPage() {
   const handleRoleChange = async (userId: string, newRole: 'admin' | 'organizzatore' | 'utente') => {
     try {
       const { error } = await supabaseClient
-        .from('profiles')
+        .from('utenti')  // Modificato da 'profiles' a 'utenti'
         .update({ ruolo: newRole })
         .eq('id', userId);
 

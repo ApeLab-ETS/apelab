@@ -20,7 +20,7 @@ export default function AdminDashboardPage() {
       try {
         // Conteggio utenti
         const { count: userCount, error: userError } = await supabaseClient
-          .from('profiles')
+          .from('utenti')
           .select('*', { count: 'exact', head: true });
 
         if (userError) throw userError;
@@ -43,7 +43,7 @@ export default function AdminDashboardPage() {
 
         // Utenti attivi nell'ultimo mese (approssimazione)
         const { count: activeCount, error: activeError } = await supabaseClient
-          .from('profiles')
+          .from('utenti')
           .select('*', { count: 'exact', head: true })
           .gt('created_at', new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString());
 
@@ -54,6 +54,13 @@ export default function AdminDashboardPage() {
           totalEvents: eventCount || 0,
           upcomingEvents: upcomingCount || 0,
           activeUsers: activeCount || 0
+        });
+        
+        console.log('Statistiche caricate:', {
+          totalUsers: userCount,
+          totalEvents: eventCount,
+          upcomingEvents: upcomingCount,
+          activeUsers: activeCount
         });
       } catch (err: any) {
         console.error('Errore durante il recupero delle statistiche:', err);
