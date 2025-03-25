@@ -52,7 +52,22 @@ export default function EventiAdminPage() {
       if (error) throw error;
       
       console.log('Eventi recuperati:', data);
-      setEventi(data || []);
+      
+      // Mappiamo i campi dal database ai nomi dei campi utilizzati nel frontend
+      const eventiMappati = data?.map(evento => ({
+        id: evento.id,
+        titolo: evento.nome || '',
+        descrizione: evento.descrizione || '',
+        data_inizio: evento.data_inizio || '',
+        data_fine: evento.data_fine || '',
+        location: evento.luogo || '',
+        stato: evento.stato || '',
+        prezzo: evento.prezzo || 0,
+        immagine_url: evento.immagine_url || '',
+        created_at: evento.created_at || '',
+      })) || [];
+      
+      setEventi(eventiMappati);
     } catch (err: any) {
       console.error('Errore durante il recupero degli eventi:', err);
       setError('Si è verificato un errore durante il recupero degli eventi.');

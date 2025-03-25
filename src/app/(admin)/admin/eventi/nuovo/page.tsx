@@ -114,6 +114,13 @@ export default function NuovoEventoPage() {
 
       if (error) throw error;
 
+      // Adattiamo i dati per il frontend
+      if (data && data.length > 0) {
+        // Se necessario, qui possiamo trasformare i dati per adattarli al frontend
+        // Esempio: mappare nome -> titolo per la compatibilità con il resto dell'app
+        console.log('Evento creato con successo:', data[0]);
+      }
+
       toast({
         title: "Evento creato",
         description: "L'evento è stato creato con successo.",

@@ -73,11 +73,11 @@ export default function ModificaEventoPage({ params }: any) {
         };
 
         setFormData({
-          titolo: data.titolo || '',
+          titolo: data.nome || '',
           descrizione: data.descrizione || '',
           data_inizio: data.data_inizio ? formatDateForInput(data.data_inizio) : '',
           data_fine: data.data_fine ? formatDateForInput(data.data_fine) : '',
-          location: data.location || '',
+          location: data.luogo || '',
           stato: data.stato || 'pianificata',
           prezzo: data.prezzo || 0,
           immagine_url: data.immagine_url || '',
@@ -123,14 +123,12 @@ export default function ModificaEventoPage({ params }: any) {
       const { error } = await supabaseClient
         .from('feste')
         .update({
-          titolo: formData.titolo,
+          nome: formData.titolo,
           descrizione: formData.descrizione,
           data_inizio: formData.data_inizio,
-          data_fine: formData.data_fine,
-          location: formData.location,
+          data_fine: formData.data_fine || null,
+          luogo: formData.location,
           stato: formData.stato,
-          prezzo: formData.prezzo,
-          immagine_url: formData.immagine_url,
           updated_at: new Date().toISOString(),
         })
         .eq('id', id);
