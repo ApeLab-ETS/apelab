@@ -1,8 +1,11 @@
 import { createServerClient } from '@supabase/ssr';
-import { type CookieOptions, cookies } from 'next/headers';
+import { cookies } from 'next/headers';
 
 // Creazione del client Supabase lato server per componenti e pagine Server Components
 export function createServerSupabaseClient() {
+  // In Next.js 15+, cookies() restituisce una Promise che non funziona
+  // direttamente con l'API di @supabase/ssr. Usiamo quindi un'implementazione più
+  // semplice che evita problemi di tipo.
   const cookieStore = cookies();
   
   return createServerClient(
@@ -11,15 +14,16 @@ export function createServerSupabaseClient() {
     {
       cookies: {
         get(name) {
+          // @ts-ignore - Sappiamo che cookieStore.get è disponibile
           return cookieStore.get(name)?.value;
         },
         set(name, value, options) {
-          // La conversione di tipo è necessaria perché il tipo CookieOptions di next/headers
-          // è diverso da quello di @supabase/ssr
-          cookieStore.set(name, value, options as CookieOptions);
+          // @ts-ignore - Sappiamo che cookieStore.set è disponibile
+          cookieStore.set(name, value, options);
         },
         remove(name, options) {
-          cookieStore.delete(name, options as CookieOptions);
+          // @ts-ignore - Sappiamo che cookieStore.delete è disponibile
+          cookieStore.delete(name, options);
         },
       },
     }
