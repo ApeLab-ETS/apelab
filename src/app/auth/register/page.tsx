@@ -108,131 +108,175 @@ export default function RegisterPage() {
   };
 
   return (
-    <div className="flex justify-center items-center min-h-[calc(100vh-4rem)] p-8">
-      <Card className="w-full max-w-2xl">
-        <CardHeader>
-          <CardTitle className="text-center">Crea un nuovo account</CardTitle>
-        </CardHeader>
-        <CardContent>
-          {error && (
-            <div className="bg-destructive/15 text-destructive p-3 rounded-md mb-4 text-sm">
-              {error}
-            </div>
-          )}
-          
-          <form onSubmit={handleRegister} className="space-y-4">
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+    <div className="min-h-screen bg-gradient-to-b from-white to-orange-50 flex justify-center items-center p-4 md:p-8">
+      <div className="w-full max-w-2xl">
+        <div className="text-center mb-8">
+          <h1 className="text-3xl md:text-4xl font-extrabold text-slate-900">
+            <span className="text-orange-500">Ape</span>lab
+          </h1>
+          <p className="text-slate-600 mt-2">Unisciti alla community di eventi a Bolzano</p>
+        </div>
+
+        <Card className="border-orange-100 shadow-xl overflow-hidden">
+          <div className="h-2 bg-gradient-to-r from-orange-500 to-orange-600"></div>
+          <CardHeader className="pb-0">
+            <CardTitle className="text-2xl font-bold text-center text-slate-800">Crea il tuo account</CardTitle>
+            <CardDescription className="text-center">
+              Registrati per partecipare ai nostri eventi esclusivi
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="pt-6">
+            {error && (
+              <div className="bg-red-50 text-red-600 p-4 rounded-lg mb-6 text-sm border border-red-200">
+                <p className="font-medium">Si è verificato un errore</p>
+                <p>{error}</p>
+              </div>
+            )}
+            
+            <form onSubmit={handleRegister} className="space-y-5">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="nome" className="text-slate-700">Nome</Label>
+                  <Input
+                    id="nome"
+                    name="nome"
+                    type="text"
+                    value={formData.nome}
+                    onChange={handleChange}
+                    placeholder="Mario"
+                    required
+                    className="border-slate-300 focus:border-orange-400 focus:ring-orange-400"
+                  />
+                </div>
+                
+                <div className="space-y-2">
+                  <Label htmlFor="cognome" className="text-slate-700">Cognome</Label>
+                  <Input
+                    id="cognome"
+                    name="cognome"
+                    type="text"
+                    value={formData.cognome}
+                    onChange={handleChange}
+                    placeholder="Rossi"
+                    required
+                    className="border-slate-300 focus:border-orange-400 focus:ring-orange-400"
+                  />
+                </div>
+              </div>
+
               <div className="space-y-2">
-                <Label htmlFor="nome">Nome</Label>
+                <Label htmlFor="email" className="text-slate-700">Email</Label>
                 <Input
-                  id="nome"
-                  name="nome"
-                  type="text"
-                  value={formData.nome}
+                  id="email"
+                  name="email"
+                  type="email"
+                  value={formData.email}
                   onChange={handleChange}
-                  placeholder="Mario"
+                  placeholder="email@esempio.com"
                   required
+                  className="border-slate-300 focus:border-orange-400 focus:ring-orange-400"
                 />
               </div>
               
               <div className="space-y-2">
-                <Label htmlFor="cognome">Cognome</Label>
+                <Label htmlFor="telefono" className="text-slate-700">Telefono</Label>
                 <Input
-                  id="cognome"
-                  name="cognome"
-                  type="text"
-                  value={formData.cognome}
+                  id="telefono"
+                  name="telefono"
+                  type="tel"
+                  value={formData.telefono}
                   onChange={handleChange}
-                  placeholder="Rossi"
-                  required
+                  placeholder="+39 123 456 7890"
+                  className="border-slate-300 focus:border-orange-400 focus:ring-orange-400"
                 />
               </div>
+              
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="password" className="text-slate-700">Password</Label>
+                  <Input
+                    id="password"
+                    name="password"
+                    type="password"
+                    value={formData.password}
+                    onChange={handleChange}
+                    placeholder="••••••••"
+                    required
+                    className="border-slate-300 focus:border-orange-400 focus:ring-orange-400"
+                  />
+                </div>
+                
+                <div className="space-y-2">
+                  <Label htmlFor="confirmPassword" className="text-slate-700">Conferma Password</Label>
+                  <Input
+                    id="confirmPassword"
+                    name="confirmPassword"
+                    type="password"
+                    value={formData.confirmPassword}
+                    onChange={handleChange}
+                    placeholder="••••••••"
+                    required
+                    className="border-slate-300 focus:border-orange-400 focus:ring-orange-400"
+                  />
+                </div>
+              </div>
+              
+              <div className="flex items-center space-x-2 pt-3">
+                <Checkbox 
+                  id="termsAccepted" 
+                  checked={formData.termsAccepted}
+                  onCheckedChange={handleCheckboxChange}
+                  required
+                  className="text-orange-500 border-slate-300 focus:ring-orange-400"
+                />
+                <Label htmlFor="termsAccepted" className="text-sm font-normal text-slate-700">
+                  Accetto i{' '}
+                  <Link href="/terms" className="text-orange-600 hover:text-orange-500 transition-colors">
+                    termini e condizioni
+                  </Link>
+                </Label>
+              </div>
+              
+              <Button
+                type="submit"
+                disabled={isLoading}
+                className="w-full bg-orange-500 hover:bg-orange-600 text-white font-medium rounded-lg py-2.5 shadow-md transition-colors"
+              >
+                {isLoading ? (
+                  <>
+                    <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                    Registrazione in corso...
+                  </>
+                ) : 'Registrati'
+                }
+              </Button>
+            </form>
+          </CardContent>
+          <CardFooter className="flex flex-col space-y-4 pt-2 pb-6">
+            <div className="w-full border-t border-slate-200 my-1"></div>
+            <p className="text-sm text-slate-600 text-center">
+              Hai già un account?{' '}
+              <Link href="/auth/login" className="text-orange-600 hover:text-orange-500 font-medium transition-colors">
+                Accedi
+              </Link>
+            </p>
+            <div className="flex items-center justify-center space-x-4">
+              <div className="w-8 h-8 bg-orange-100 text-orange-500 rounded-full flex items-center justify-center text-lg">
+                🎵
+              </div>
+              <div className="w-8 h-8 bg-orange-100 text-orange-500 rounded-full flex items-center justify-center text-lg">
+                🍹
+              </div>
+              <div className="w-8 h-8 bg-orange-100 text-orange-500 rounded-full flex items-center justify-center text-lg">
+                🎉
+              </div>
             </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="email">Email</Label>
-              <Input
-                id="email"
-                name="email"
-                type="email"
-                value={formData.email}
-                onChange={handleChange}
-                placeholder="email@esempio.com"
-                required
-              />
-            </div>
-            
-            <div className="space-y-2">
-              <Label htmlFor="telefono">Telefono</Label>
-              <Input
-                id="telefono"
-                name="telefono"
-                type="tel"
-                value={formData.telefono}
-                onChange={handleChange}
-                placeholder="+39 123 456 7890"
-              />
-            </div>
-            
-            <div className="space-y-2">
-              <Label htmlFor="password">Password</Label>
-              <Input
-                id="password"
-                name="password"
-                type="password"
-                value={formData.password}
-                onChange={handleChange}
-                placeholder="••••••••"
-                required
-              />
-            </div>
-            
-            <div className="space-y-2">
-              <Label htmlFor="confirmPassword">Conferma Password</Label>
-              <Input
-                id="confirmPassword"
-                name="confirmPassword"
-                type="password"
-                value={formData.confirmPassword}
-                onChange={handleChange}
-                placeholder="••••••••"
-                required
-              />
-            </div>
-            
-            <div className="flex items-center space-x-2 pt-2">
-              <Checkbox 
-                id="termsAccepted" 
-                checked={formData.termsAccepted}
-                onCheckedChange={handleCheckboxChange}
-                required
-              />
-              <Label htmlFor="termsAccepted" className="text-sm font-normal">
-                Accetto i{' '}
-                <Link href="/terms" className="text-primary hover:underline">
-                  termini e condizioni
-                </Link>
-              </Label>
-            </div>
-            
-            <Button
-              type="submit"
-              disabled={isLoading}
-              className="w-full"
-            >
-              {isLoading ? 'Registrazione in corso...' : 'Registrati'}
-            </Button>
-          </form>
-        </CardContent>
-        <CardFooter className="flex justify-center">
-          <p className="text-sm text-muted-foreground">
-            Hai già un account?{' '}
-            <Link href="/auth/login" className="text-primary hover:underline">
-              Accedi
-            </Link>
-          </p>
-        </CardFooter>
-      </Card>
+          </CardFooter>
+        </Card>
+      </div>
     </div>
   );
 } 

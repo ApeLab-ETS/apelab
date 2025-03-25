@@ -45,10 +45,8 @@ export default function Home() {
                   <div className="text-5xl mb-2">🎧</div>
                   <h3 className="text-2xl font-bold mb-1">15 Luglio</h3>
                   <p className="text-lg font-medium">ore 21:00</p>
-                  <div className="flex justify-center w-full mt-6">
-                    <div className="bg-white bg-opacity-20 rounded-full py-2 px-6 inline-block text-center w-auto">
-                      <p className="text-sm font-semibold">Bolzano, Centrum</p>
-                    </div>
+                  <div className="mt-6 bg-white bg-opacity-20 rounded-full py-2 px-6 mx-auto inline-flex justify-center items-center">
+                    <p className="text-sm font-semibold text-center">Bolzano, Centrum</p>
                   </div>
                 </div>
               </div>
@@ -212,9 +210,6 @@ export default function Home() {
           </div>
           <div className="border-t border-slate-800 mt-8 pt-8 text-center text-slate-400">
             <p>&copy; {new Date().getFullYear()} Apelab. Tutti i diritti riservati.</p>
-            <p className="mt-2">
-              Made with <span className="text-red-500">❤</span> by <a href="https://francescomasala.me" target="_blank" rel="noopener noreferrer" className="text-orange-400 hover:text-orange-300 transition-colors">Francesco Masala</a>
-            </p>
           </div>
         </div>
       </footer>
