@@ -13,8 +13,12 @@ export default function AdminDebugPage() {
 
   useEffect(() => {
     // Verifica se le variabili d'ambiente necessarie sono configurate
-    if (!window.location.host.includes('localhost') && 
-        process.env.NODE_ENV !== 'development') {
+    // Spostiamo il controllo su window all'interno dell'useEffect per evitare problemi di hydration
+    const isLocalhost = typeof window !== 'undefined' && 
+      window.location.host.includes('localhost');
+    const isDevelopment = process.env.NODE_ENV === 'development';
+    
+    if (!isLocalhost && !isDevelopment) {
       setConfigError('Questa pagina è disponibile solo in ambiente di sviluppo');
       setIsLoading(false);
       return;
