@@ -108,35 +108,35 @@ export default function RegisterPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-white to-orange-50 flex justify-center items-center p-4 md:p-8">
+    <div className="min-h-screen bg-gradient-to-b from-white to-orange-50 flex flex-col justify-center items-center py-6 px-4 sm:py-10 sm:px-6">
       <div className="w-full max-w-2xl">
-        <div className="text-center mb-8">
+        <div className="text-center mb-6 sm:mb-8">
           <h1 className="text-3xl md:text-4xl font-extrabold text-slate-900">
             <span className="text-orange-500">Ape</span>lab
           </h1>
-          <p className="text-slate-600 mt-2">Unisciti alla community di eventi a Bolzano</p>
+          <p className="text-slate-600 mt-2 text-base sm:text-lg">Unisciti alla community di eventi a Bolzano</p>
         </div>
 
-        <Card className="border-orange-100 shadow-xl overflow-hidden">
+        <Card className="border-orange-100 shadow-xl overflow-hidden w-full">
           <div className="h-2 bg-gradient-to-r from-orange-500 to-orange-600"></div>
-          <CardHeader className="pb-0">
-            <CardTitle className="text-2xl font-bold text-center text-slate-800">Crea il tuo account</CardTitle>
-            <CardDescription className="text-center">
+          <CardHeader className="pb-0 pt-5 px-5 sm:px-6">
+            <CardTitle className="text-xl sm:text-2xl font-bold text-center text-slate-800">Crea il tuo account</CardTitle>
+            <CardDescription className="text-center text-sm sm:text-base">
               Registrati per partecipare ai nostri eventi esclusivi
             </CardDescription>
           </CardHeader>
-          <CardContent className="pt-6">
+          <CardContent className="pt-5 px-5 sm:px-6">
             {error && (
-              <div className="bg-red-50 text-red-600 p-4 rounded-lg mb-6 text-sm border border-red-200">
+              <div className="bg-red-50 text-red-600 p-3 sm:p-4 rounded-lg mb-5 text-sm border border-red-200">
                 <p className="font-medium">Si è verificato un errore</p>
                 <p>{error}</p>
               </div>
             )}
             
-            <form onSubmit={handleRegister} className="space-y-5">
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="nome" className="text-slate-700">Nome</Label>
+            <form onSubmit={handleRegister} className="space-y-4 sm:space-y-5">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+                <div className="space-y-1.5 sm:space-y-2">
+                  <Label htmlFor="nome" className="text-slate-700 text-sm sm:text-base">Nome</Label>
                   <Input
                     id="nome"
                     name="nome"
@@ -145,12 +145,12 @@ export default function RegisterPage() {
                     onChange={handleChange}
                     placeholder="Mario"
                     required
-                    className="border-slate-300 focus:border-orange-400 focus:ring-orange-400"
+                    className="border-slate-300 focus:border-orange-400 focus:ring-orange-400 h-10 sm:h-11"
                   />
                 </div>
                 
-                <div className="space-y-2">
-                  <Label htmlFor="cognome" className="text-slate-700">Cognome</Label>
+                <div className="space-y-1.5 sm:space-y-2">
+                  <Label htmlFor="cognome" className="text-slate-700 text-sm sm:text-base">Cognome</Label>
                   <Input
                     id="cognome"
                     name="cognome"
@@ -159,13 +159,13 @@ export default function RegisterPage() {
                     onChange={handleChange}
                     placeholder="Rossi"
                     required
-                    className="border-slate-300 focus:border-orange-400 focus:ring-orange-400"
+                    className="border-slate-300 focus:border-orange-400 focus:ring-orange-400 h-10 sm:h-11"
                   />
                 </div>
               </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="email" className="text-slate-700">Email</Label>
+              <div className="space-y-1.5 sm:space-y-2">
+                <Label htmlFor="email" className="text-slate-700 text-sm sm:text-base">Email</Label>
                 <Input
                   id="email"
                   name="email"
@@ -174,12 +174,12 @@ export default function RegisterPage() {
                   onChange={handleChange}
                   placeholder="email@esempio.com"
                   required
-                  className="border-slate-300 focus:border-orange-400 focus:ring-orange-400"
+                  className="border-slate-300 focus:border-orange-400 focus:ring-orange-400 h-10 sm:h-11"
                 />
               </div>
               
-              <div className="space-y-2">
-                <Label htmlFor="telefono" className="text-slate-700">Telefono</Label>
+              <div className="space-y-1.5 sm:space-y-2">
+                <Label htmlFor="telefono" className="text-slate-700 text-sm sm:text-base">Telefono</Label>
                 <Input
                   id="telefono"
                   name="telefono"
@@ -187,13 +187,13 @@ export default function RegisterPage() {
                   value={formData.telefono}
                   onChange={handleChange}
                   placeholder="+39 123 456 7890"
-                  className="border-slate-300 focus:border-orange-400 focus:ring-orange-400"
+                  className="border-slate-300 focus:border-orange-400 focus:ring-orange-400 h-10 sm:h-11"
                 />
               </div>
               
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="password" className="text-slate-700">Password</Label>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+                <div className="space-y-1.5 sm:space-y-2">
+                  <Label htmlFor="password" className="text-slate-700 text-sm sm:text-base">Password</Label>
                   <Input
                     id="password"
                     name="password"
@@ -202,12 +202,12 @@ export default function RegisterPage() {
                     onChange={handleChange}
                     placeholder="••••••••"
                     required
-                    className="border-slate-300 focus:border-orange-400 focus:ring-orange-400"
+                    className="border-slate-300 focus:border-orange-400 focus:ring-orange-400 h-10 sm:h-11"
                   />
                 </div>
                 
-                <div className="space-y-2">
-                  <Label htmlFor="confirmPassword" className="text-slate-700">Conferma Password</Label>
+                <div className="space-y-1.5 sm:space-y-2">
+                  <Label htmlFor="confirmPassword" className="text-slate-700 text-sm sm:text-base">Conferma Password</Label>
                   <Input
                     id="confirmPassword"
                     name="confirmPassword"
@@ -216,20 +216,20 @@ export default function RegisterPage() {
                     onChange={handleChange}
                     placeholder="••••••••"
                     required
-                    className="border-slate-300 focus:border-orange-400 focus:ring-orange-400"
+                    className="border-slate-300 focus:border-orange-400 focus:ring-orange-400 h-10 sm:h-11"
                   />
                 </div>
               </div>
               
-              <div className="flex items-center space-x-2 pt-3">
+              <div className="flex items-center space-x-2 pt-2 sm:pt-3">
                 <Checkbox 
                   id="termsAccepted" 
                   checked={formData.termsAccepted}
                   onCheckedChange={handleCheckboxChange}
                   required
-                  className="text-orange-500 border-slate-300 focus:ring-orange-400"
+                  className="text-orange-500 border-slate-300 focus:ring-orange-400 h-4 w-4"
                 />
-                <Label htmlFor="termsAccepted" className="text-sm font-normal text-slate-700">
+                <Label htmlFor="termsAccepted" className="text-xs sm:text-sm font-normal text-slate-700">
                   Accetto i{' '}
                   <Link href="/terms" className="text-orange-600 hover:text-orange-500 transition-colors">
                     termini e condizioni
@@ -240,7 +240,7 @@ export default function RegisterPage() {
               <Button
                 type="submit"
                 disabled={isLoading}
-                className="w-full bg-orange-500 hover:bg-orange-600 text-white font-medium rounded-lg py-2.5 shadow-md transition-colors"
+                className="w-full bg-orange-500 hover:bg-orange-600 text-white font-medium rounded-lg py-2 sm:py-2.5 shadow-md transition-colors mt-2 h-10 sm:h-11"
               >
                 {isLoading ? (
                   <>
@@ -248,29 +248,29 @@ export default function RegisterPage() {
                       <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                       <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                     </svg>
-                    Registrazione in corso...
+                    <span className="text-sm sm:text-base">Registrazione in corso...</span>
                   </>
-                ) : 'Registrati'
+                ) : <span className="text-sm sm:text-base">Registrati</span>
                 }
               </Button>
             </form>
           </CardContent>
-          <CardFooter className="flex flex-col space-y-4 pt-2 pb-6">
+          <CardFooter className="flex flex-col space-y-3 sm:space-y-4 pt-2 px-5 pb-5 sm:pb-6 sm:px-6">
             <div className="w-full border-t border-slate-200 my-1"></div>
-            <p className="text-sm text-slate-600 text-center">
+            <p className="text-xs sm:text-sm text-slate-600 text-center">
               Hai già un account?{' '}
               <Link href="/auth/login" className="text-orange-600 hover:text-orange-500 font-medium transition-colors">
                 Accedi
               </Link>
             </p>
             <div className="flex items-center justify-center space-x-4">
-              <div className="w-8 h-8 bg-orange-100 text-orange-500 rounded-full flex items-center justify-center text-lg">
+              <div className="w-7 h-7 sm:w-8 sm:h-8 bg-orange-100 text-orange-500 rounded-full flex items-center justify-center text-base sm:text-lg">
                 🎵
               </div>
-              <div className="w-8 h-8 bg-orange-100 text-orange-500 rounded-full flex items-center justify-center text-lg">
+              <div className="w-7 h-7 sm:w-8 sm:h-8 bg-orange-100 text-orange-500 rounded-full flex items-center justify-center text-base sm:text-lg">
                 🍹
               </div>
-              <div className="w-8 h-8 bg-orange-100 text-orange-500 rounded-full flex items-center justify-center text-lg">
+              <div className="w-7 h-7 sm:w-8 sm:h-8 bg-orange-100 text-orange-500 rounded-full flex items-center justify-center text-base sm:text-lg">
                 🎉
               </div>
             </div>
