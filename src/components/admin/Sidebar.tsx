@@ -12,7 +12,8 @@ import {
   Menu,
   LogOut,
   ChevronDown,
-  BarChart3
+  BarChart3,
+  PartyPopper
 } from 'lucide-react';
 import { supabaseClient } from '@/lib/supabase/client';
 import { cn } from '@/lib/utils';
@@ -56,6 +57,12 @@ export function Sidebar({ userName, userEmail, onLogout }: SidebarProps) {
       href: '/admin/users',
       icon: <Users className="h-5 w-5" />,
       active: pathname === '/admin/users',
+    },
+    {
+      title: 'Approvazioni Festa',
+      href: '/admin/approvazioni',
+      icon: <PartyPopper className="h-5 w-5" />,
+      active: pathname === '/admin/approvazioni',
     },
     {
       title: 'Eventi',
