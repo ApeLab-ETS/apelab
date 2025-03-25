@@ -1,6 +1,5 @@
-import { createServerClient } from '@supabase/ssr';
-import { cookies } from 'next/headers';
 import { NextResponse } from 'next/server';
+import { createServerSupabaseClient } from '@/lib/supabase/server';
 
 export async function GET(request: Request) {
   const { searchParams, origin } = new URL(request.url);
@@ -8,32 +7,7 @@ export async function GET(request: Request) {
   const next = searchParams.get('next') || '/';
 
   if (code) {
-    const cookieStore = cookies();
-    const supabase = createServerClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-      {
-        cookies: {
-          get(name: string) {
-            return cookieStore.get(name)?.value;
-          },
-          set(name: string, value: string, options: { path: string; maxAge: number; domain?: string }) {
-            try {
-              cookieStore.set(name, value, options);
-            } catch (error) {
-              // Ignora errori durante il settaggio dei cookie
-            }
-          },
-          remove(name: string, options: { path: string; domain?: string }) {
-            try {
-              cookieStore.set(name, '', { ...options, maxAge: 0 });
-            } catch (error) {
-              // Ignora errori durante la rimozione dei cookie
-            }
-          },
-        },
-      }
-    );
+    const supabase = createServerSupabaseClient();
 
     try {
       const { error } = await supabase.auth.exchangeCodeForSession(code);
