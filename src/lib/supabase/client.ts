@@ -1,4 +1,5 @@
 import { createBrowserClient } from '@supabase/ssr';
+import { type User } from '@supabase/supabase-js';
 
 // Creazione del client Supabase lato browser
 export const supabaseClient = createBrowserClient(
@@ -6,20 +7,10 @@ export const supabaseClient = createBrowserClient(
   process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
 );
 
-// Tipi per il database
-// Nota: Il nome della tabella nel database è 'utenti', ma manteniamo il tipo 'Profile' 
-// per compatibilità con il codice esistente
-export type Profile = {
-  id: string;
-  email: string;
-  nome: string;
-  cognome: string;
-  ruolo: 'admin' | 'organizzatore' | 'utente';
-  telefono: string;
-  avatar_url?: string; // Campo opzionale
-  created_at: string;
-};
+// Re-export del tipo User da Supabase per comodità
+export type { User };
 
+// Tipi per le tabelle del database
 export type Festa = {
   id: number;
   nome: string;

@@ -1,7 +1,20 @@
 import { createServerSupabaseClient } from '@/lib/supabase/server';
 import { NextResponse } from 'next/server';
 
-// Una funzione segreta temporanea per promuovere un utente ad admin
+/**
+ * API Temporanea che simula la promozione di un utente ad admin
+ * 
+ * COME USARE:
+ * 1. Apri nel browser: /api/admin-promote?email=mail@francescomasala.me&key=temp_secret_key_change_me
+ * 2. Assicurati di sostituire l'email con quella dell'utente da promuovere
+ * 3. IMPORTANTE: Dopo aver promosso il tuo utente, cambia immediatamente la SECRET_KEY
+ *    per motivi di sicurezza o elimina completamente questo file!
+ * 
+ * FUNZIONAMENTO:
+ * - In questa versione, la funzione non modifica effettivamente il database
+ * - Invece, mostra come dovresti modificare il codice per aggiungere un utente alla whitelist
+ * - La whitelist si trova in src/app/admin/layout.tsx
+ */
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
   const email = searchParams.get('email');
@@ -21,44 +34,27 @@ export async function GET(request: Request) {
   }
   
   try {
-    const supabase = createServerSupabaseClient();
+    // Questa versione è solo dimostrativa e non apporta modifiche effettive
+    // In un'implementazione reale, dovresti modificare il file layout.tsx
+    // o mantenere la whitelist admin in un database
     
-    // Prima verifica se l'utente esiste
-    const { data: user, error: fetchError } = await supabase
-      .from('utenti')
-      .select('*')
-      .eq('email', email)
-      .single();
+    console.log(`Simulazione promozione utente: ${email}`);
     
-    if (fetchError) {
-      console.error('Errore recupero utente:', fetchError);
-      return NextResponse.json({ 
-        error: 'User not found', 
-        details: fetchError.message 
-      }, { status: 404 });
-    }
+    // In questa versione semplificata, non verifichiamo l'esistenza dell'utente
+    // poiché le API admin potrebbero non essere disponibili con l'ANON_KEY
     
-    // Poi aggiorna il ruolo a 'admin'
-    const { error: updateError } = await supabase
-      .from('utenti')
-      .update({ ruolo: 'admin' })
-      .eq('email', email);
-      
-    if (updateError) {
-      console.error('Errore aggiornamento utente:', updateError);
-      return NextResponse.json({ 
-        error: 'Failed to update user', 
-        details: updateError.message 
-      }, { status: 500 });
-    }
-    
-    console.log(`Utente ${email} promosso a admin`);
     return NextResponse.json({ 
       success: true, 
-      message: `User ${email} promoted to admin` 
+      message: `Per promuovere ${email} a admin, aggiungi questa email alla whitelist in src/app/admin/layout.tsx`,
+      instructions: [
+        "1. Apri il file src/app/admin/layout.tsx",
+        "2. Trova l'array ADMIN_EMAILS",
+        `3. Aggiungi '${email}' all'array`,
+        "4. Salva il file e riavvia l'applicazione se necessario"
+      ]
     });
   } catch (err) {
-    console.error('Errore promozione utente:', err);
+    console.error('Errore:', err);
     return NextResponse.json({ 
       error: 'Server error', 
       details: (err as Error).message 

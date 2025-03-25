@@ -57,7 +57,7 @@ export default function RegisterPage() {
     setIsLoading(true);
 
     try {
-      // 1. Registrazione dell'utente
+      // Registrazione dell'utente con i metadata necessari
       const { data: authData, error: authError } = await supabaseClient.auth.signUp({
         email: formData.email,
         password: formData.password,
@@ -66,7 +66,8 @@ export default function RegisterPage() {
             nome: formData.nome,
             cognome: formData.cognome,
             telefono: formData.telefono,
-            ruolo: 'utente' // Ruolo di default
+            full_name: `${formData.nome} ${formData.cognome}`, // Aggiungiamo anche il nome completo per comodità
+            created_at: new Date().toISOString()
           }
         }
       });
@@ -76,32 +77,9 @@ export default function RegisterPage() {
         return;
       }
 
-      console.log('Autenticazione completata, dati utente:', authData);
+      console.log('Registrazione completata con successo, dati utente:', authData);
 
-      // 2. Inserisci i dati aggiuntivi nella tabella profili se necessario
-      // Nota: in molti casi questo passo è gestito da un trigger in Supabase
-      if (authData?.user) {
-        const { error: profileError } = await supabaseClient
-          .from('utenti')  // Modificato da 'profiles' a 'utenti'
-          .upsert({
-            id: authData.user.id,
-            email: formData.email,
-            nome: formData.nome,
-            cognome: formData.cognome,
-            telefono: formData.telefono,
-            ruolo: 'utente',
-            created_at: new Date().toISOString()
-          });
-
-        if (profileError) {
-          console.error("Errore nell'inserimento del profilo:", profileError);
-          // La registrazione è comunque avvenuta, quindi non blocchiamo il processo
-        } else {
-          console.log('Profilo utente inserito con successo nella tabella utenti');
-        }
-      }
-
-      // Reindirizza alla pagina di successo o login
+      // Reindirizza alla pagina di verifica email
       router.push('/auth/verifica-email');
     } catch (err) {
       console.error("Errore durante la registrazione:", err);
