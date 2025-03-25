@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { supabaseClient } from '@/lib/supabase/client';
 import { 
@@ -28,7 +28,7 @@ type EventoFormData = {
   immagine_url?: string;
 };
 
-export default function NuovoEventoPage() {
+export default function ModificaEventoForm({ id }: { id: string }) {
   const router = useRouter();
   const { toast } = useToast();
   
@@ -43,8 +43,50 @@ export default function NuovoEventoPage() {
     immagine_url: '',
   });
   
+  const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    fetchEvento();
+  }, [id]);
+
+  const fetchEvento = async () => {
+    setLoading(true);
+    try {
+      const { data, error } = await supabaseClient
+        .from('feste')
+        .select('*')
+        .eq('id', id)
+        .single();
+
+      if (error) throw error;
+      
+      if (data) {
+        // Formatta le date per l'input type="datetime-local"
+        const formatDateForInput = (dateString: string) => {
+          const date = new Date(dateString);
+          return date.toISOString().slice(0, 16);
+        };
+
+        setFormData({
+          titolo: data.titolo || '',
+          descrizione: data.descrizione || '',
+          data_inizio: data.data_inizio ? formatDateForInput(data.data_inizio) : '',
+          data_fine: data.data_fine ? formatDateForInput(data.data_fine) : '',
+          location: data.location || '',
+          stato: data.stato || 'pianificata',
+          prezzo: data.prezzo || 0,
+          immagine_url: data.immagine_url || '',
+        });
+      }
+    } catch (err: any) {
+      console.error('Errore nel recupero dell\'evento:', err);
+      setError('Non è stato possibile recuperare i dati dell\'evento.');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
@@ -75,9 +117,9 @@ export default function NuovoEventoPage() {
     setError(null);
 
     try {
-      const { data, error } = await supabaseClient
+      const { error } = await supabaseClient
         .from('feste')
-        .insert({
+        .update({
           titolo: formData.titolo,
           descrizione: formData.descrizione,
           data_inizio: formData.data_inizio,
@@ -86,34 +128,45 @@ export default function NuovoEventoPage() {
           stato: formData.stato,
           prezzo: formData.prezzo,
           immagine_url: formData.immagine_url,
-          created_at: new Date().toISOString(),
           updated_at: new Date().toISOString(),
         })
-        .select();
+        .eq('id', id);
 
       if (error) throw error;
 
       toast({
-        title: "Evento creato",
-        description: "L'evento è stato creato con successo.",
+        title: "Evento aggiornato",
+        description: "L'evento è stato aggiornato con successo.",
       });
       
       router.push('/admin/eventi');
     } catch (err: any) {
-      console.error('Errore durante la creazione dell\'evento:', err);
+      console.error('Errore durante l\'aggiornamento dell\'evento:', err);
       setError('Si è verificato un errore durante il salvataggio. Riprova più tardi.');
     } finally {
       setSubmitting(false);
     }
   };
 
+  if (loading) {
+    return (
+      <div className="container mx-auto py-10 px-4">
+        <Card>
+          <CardContent className="pt-6">
+            <div className="text-center py-8">Caricamento dati evento...</div>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
+
   return (
     <div className="container mx-auto py-10 px-4">
       <Card>
         <CardHeader>
-          <CardTitle className="text-2xl font-bold">Nuovo Evento</CardTitle>
+          <CardTitle className="text-2xl font-bold">Modifica Evento</CardTitle>
           <CardDescription>
-            Crea un nuovo evento o festa.
+            Aggiorna i dettagli dell'evento esistente.
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -243,7 +296,7 @@ export default function NuovoEventoPage() {
                 className="bg-orange-500 hover:bg-orange-600"
                 disabled={submitting}
               >
-                {submitting ? 'Creazione in corso...' : 'Crea Evento'}
+                {submitting ? 'Salvataggio...' : 'Salva modifiche'}
               </Button>
             </div>
           </form>

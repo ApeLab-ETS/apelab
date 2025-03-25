@@ -22,28 +22,28 @@ export default function LoginPage() {
     setIsLoading(true);
 
     try {
-      const { data, error } = await supabaseClient.auth.signInWithPassword({
+      const { data: authData, error: authError } = await supabaseClient.auth.signInWithPassword({
         email,
         password
       });
 
-      if (error) {
-        setError(error.message);
-      } else {
-        // Dopo il login, controlla se l'utente è un super admin
-        const { data: userData } = await supabaseClient.auth.getUser();
-        const user = userData.user;
-        
-        if (user?.app_metadata?.is_super_admin) {
-          // Se l'utente è un admin, reindirizza alla dashboard admin
-          console.log("Utente super admin rilevato, reindirizzamento alla dashboard admin");
-          router.push('/admin/dashboard');
-        } else {
-          // Altrimenti, reindirizza alla home page come prima
-          router.push('/');
-        }
-        router.refresh();
+      if (authError) {
+        setError(authError.message);
+        return;
       }
+
+      // Controlla se l'utente è un super admin
+      const { data: userData } = await supabaseClient.auth.getUser();
+      
+      if (userData?.user?.app_metadata?.is_super_admin) {
+        // Reindirizza al pannello admin
+        router.push('/admin');
+      } else {
+        // Reindirizza alla home per utenti normali
+        router.push('/');
+      }
+      
+      router.refresh();
     } catch (err) {
       console.error("Errore durante il login:", err);
       setError("Si è verificato un errore durante il login. Riprova più tardi.");
