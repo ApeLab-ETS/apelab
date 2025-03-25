@@ -10,6 +10,22 @@ export const supabaseClient = createBrowserClient(
 // Re-export del tipo User da Supabase per comodità
 export type { User };
 
+// Tipo per il profilo utente
+export type Profile = {
+  id: string;
+  user_id: string;
+  first_name?: string;
+  last_name?: string;
+  avatar_url?: string;
+  email?: string;
+  username?: string;
+  bio?: string;
+  website?: string;
+  created_at?: string;
+  updated_at?: string;
+  is_super_admin?: boolean;
+};
+
 // Tipi per le tabelle del database
 export type Festa = {
   id: number;
