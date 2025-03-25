@@ -212,6 +212,9 @@ export default function Home() {
           </div>
           <div className="border-t border-slate-800 mt-8 pt-8 text-center text-slate-400">
             <p>&copy; {new Date().getFullYear()} Apelab. Tutti i diritti riservati.</p>
+            <p className="mt-2">
+              Made with <span className="text-red-500">❤</span> by <a href="https://francescomasala.me" target="_blank" rel="noopener noreferrer" className="text-orange-400 hover:text-orange-300 transition-colors">Francesco Masala</a>
+            </p>
           </div>
         </div>
       </footer>
