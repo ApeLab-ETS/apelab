@@ -139,6 +139,16 @@ export default function EventiLista() {
     });
   };
   
+  // Formatta l'ora in formato leggibile
+  const formatOra = (dataString: string) => {
+    if (!dataString) return '';
+    const data = new Date(dataString);
+    return data.toLocaleTimeString('it-IT', {
+      hour: '2-digit',
+      minute: '2-digit'
+    });
+  };
+  
   // Ottieni la classe del badge in base allo stato
   const getStatoBadgeClass = (stato: string) => {
     switch (stato) {
@@ -311,6 +321,15 @@ export default function EventiLista() {
                       </div>
                     </div>
                     <div className="flex items-center">
+                      <span className="mr-2 text-orange-500">🕒</span> 
+                      <div>
+                        <div>Dalle {formatOra(evento.data_inizio)}</div>
+                        {evento.data_fine && (
+                          <div className="text-slate-500">alle {formatOra(evento.data_fine)}</div>
+                        )}
+                      </div>
+                    </div>
+                    <div className="flex items-center">
                       <span className="mr-2 text-orange-500">📍</span> {evento.location}
                     </div>
                     <div className="flex items-center">
@@ -319,13 +338,23 @@ export default function EventiLista() {
                   </div>
                   
                   <div className="flex space-x-3">
-                    <Link href={`/eventi/${evento.id}`} className="flex-1 inline-block text-center px-4 py-2 bg-orange-500 text-white font-medium rounded-lg shadow-sm hover:bg-orange-600 transition-all">
-                      {evento.passato ? 'Scopri come è stato' : 'Dettagli'}
-                    </Link>
-                    {!evento.passato && evento.stato === 'pianificata' && (
-                      <Link href={`/eventi/${evento.id}`} className="flex-1 inline-block text-center px-4 py-2 bg-white text-orange-500 font-medium border border-orange-200 rounded-lg shadow-sm hover:bg-orange-50 transition-all">
-                        Partecipa
+                    {evento.passato ? (
+                      // CTA per evento passato
+                      <Link href={`/eventi/${evento.id}`} className="w-full inline-block text-center px-4 py-2 bg-slate-700 text-white font-medium rounded-lg shadow-sm hover:bg-slate-800 transition-all">
+                        Scopri come è stato
                       </Link>
+                    ) : (
+                      // CTA per evento futuro
+                      <>
+                        <Link href={`/eventi/${evento.id}`} className="flex-1 inline-block text-center px-4 py-2 bg-orange-500 text-white font-medium rounded-lg shadow-sm hover:bg-orange-600 transition-all">
+                          Dettagli
+                        </Link>
+                        {evento.stato === 'pianificata' && (
+                          <Link href={`/eventi/${evento.id}`} className="flex-1 inline-block text-center px-4 py-2 bg-white text-orange-500 font-medium border border-orange-200 rounded-lg shadow-sm hover:bg-orange-50 transition-all">
+                            Partecipa
+                          </Link>
+                        )}
+                      </>
                     )}
                   </div>
                 </div>

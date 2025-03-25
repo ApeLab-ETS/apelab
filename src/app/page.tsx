@@ -100,6 +100,16 @@ export default function Home() {
     });
   };
 
+  // Formatta l'ora in formato italiano
+  const formatOra = (dataString: string) => {
+    if (!dataString) return '';
+    const data = new Date(dataString);
+    return data.toLocaleTimeString('it-IT', {
+      hour: '2-digit',
+      minute: '2-digit'
+    });
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-white to-orange-50">
       {/* Banner evento in primo piano */}
@@ -108,7 +118,7 @@ export default function Home() {
           <div className="container mx-auto px-4 flex justify-center items-center">
             <p className="font-medium inline-block">
               {eventoInEvidenza.passato ? '🏆 Evento recente: ' : '🎉 Prossimo evento: '}
-              <span className="font-bold">{eventoInEvidenza.titolo}</span> - {formatData(eventoInEvidenza.data_inizio)}
+              <span className="font-bold">{eventoInEvidenza.titolo}</span> - {formatData(eventoInEvidenza.data_inizio)} alle {formatOra(eventoInEvidenza.data_inizio)}
             </p>
           </div>
         </div>
@@ -158,12 +168,21 @@ export default function Home() {
                     <span className="mr-2">📅</span> {formatData(eventoInEvidenza.data_inizio)}
                   </div>
                   <div className="flex items-center">
+                    <span className="mr-2">🕒</span> {formatOra(eventoInEvidenza.data_inizio)}
+                  </div>
+                  <div className="flex items-center">
                     <span className="mr-2">📍</span> {eventoInEvidenza.location}
                   </div>
                 </div>
-                <Link href={`/eventi/${eventoInEvidenza.id}`} className="inline-block px-6 py-3 bg-orange-500 text-white font-medium rounded-lg shadow-md hover:bg-orange-600 transition-all">
-                  Scopri di più
-                </Link>
+                {eventoInEvidenza.passato ? (
+                  <Link href={`/eventi/${eventoInEvidenza.id}`} className="inline-block px-6 py-3 bg-slate-700 text-white font-medium rounded-lg shadow-md hover:bg-slate-800 transition-all">
+                    Scopri come è stato
+                  </Link>
+                ) : (
+                  <Link href={`/eventi/${eventoInEvidenza.id}`} className="inline-block px-6 py-3 bg-orange-500 text-white font-medium rounded-lg shadow-md hover:bg-orange-600 transition-all">
+                    Scopri di più
+                  </Link>
+                )}
               </div>
             </div>
           </div>
@@ -234,12 +253,22 @@ export default function Home() {
                         {evento.passato && <span className="ml-2 text-xs bg-gray-100 text-gray-800 px-2 py-0.5 rounded-full">Concluso</span>}
                       </div>
                       <div className="flex items-center">
+                        <span className="mr-2">🕒</span> {formatOra(evento.data_inizio)}
+                      </div>
+                      <div className="flex items-center">
                         <span className="mr-2">📍</span> {evento.location}
                       </div>
                     </div>
-                    <Link href={`/eventi/${evento.id}`} className="inline-block w-full text-center px-4 py-2 bg-orange-500 text-white font-medium rounded-lg shadow-sm hover:bg-orange-600 transition-all">
-                      {evento.passato ? 'Scopri come è stato' : 'Dettagli'}
-                    </Link>
+                    
+                    {evento.passato ? (
+                      <Link href={`/eventi/${evento.id}`} className="inline-block w-full text-center px-4 py-2 bg-slate-700 text-white font-medium rounded-lg shadow-sm hover:bg-slate-800 transition-all">
+                        Scopri come è stato
+                      </Link>
+                    ) : (
+                      <Link href={`/eventi/${evento.id}`} className="inline-block w-full text-center px-4 py-2 bg-orange-500 text-white font-medium rounded-lg shadow-sm hover:bg-orange-600 transition-all">
+                        Dettagli
+                      </Link>
+                    )}
                   </div>
                 </div>
               ))}
