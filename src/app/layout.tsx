@@ -17,18 +17,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="it" suppressHydrationWarning>
-      <body className={inter.className} style={{ 
-        minHeight: '100vh',
-        margin: 0,
-        fontFamily: 'var(--font-inter)'
-      }}>
-        <div style={{ 
-          display: 'flex', 
-          flexDirection: 'column',
-          minHeight: '100vh'
-        }}>
+      <body className={`${inter.className} min-h-screen m-0`}>
+        <div className="flex flex-col min-h-screen">
           <Navbar />
-          <main style={{ flex: 1 }}>
+          <main className="flex-1">
             {children}
           </main>
         </div>

@@ -2,52 +2,21 @@ import Link from 'next/link';
 
 export default function Navbar() {
   return (
-    <nav style={{ 
-      backgroundColor: 'white', 
-      borderBottom: '1px solid #e5e7eb',
-      padding: '1rem',
-      display: 'flex',
-      justifyContent: 'space-between',
-      alignItems: 'center'
-    }}>
+    <nav className="bg-white border-b border-gray-200 px-4 py-4 flex justify-between items-center">
       <div>
-        <Link href="/" style={{ 
-          fontSize: '1.5rem', 
-          fontWeight: 'bold',
-          color: '#1d4ed8',
-          textDecoration: 'none'
-        }}>
+        <Link href="/" className="text-2xl font-bold text-blue-700 no-underline">
           Gestione Feste
         </Link>
       </div>
       
-      <div style={{ display: 'flex', gap: '1rem' }}>
-        <Link href="/feste" style={{ 
-          color: '#4b5563', 
-          textDecoration: 'none',
-          padding: '0.5rem',
-          borderRadius: '0.25rem',
-          transition: 'background-color 0.2s'
-        }}>
+      <div className="flex gap-4">
+        <Link href="/feste" className="text-gray-600 no-underline px-2 py-2 rounded-md transition-colors">
           Feste
         </Link>
-        <Link href="/auth/login" style={{ 
-          color: '#4b5563', 
-          textDecoration: 'none',
-          padding: '0.5rem',
-          borderRadius: '0.25rem',
-          transition: 'background-color 0.2s'
-        }}>
+        <Link href="/auth/login" className="text-gray-600 no-underline px-2 py-2 rounded-md transition-colors">
           Accedi
         </Link>
-        <Link href="/auth/register" style={{ 
-          backgroundColor: '#1d4ed8',
-          color: 'white',
-          textDecoration: 'none',
-          padding: '0.5rem 1rem',
-          borderRadius: '0.25rem',
-          transition: 'background-color 0.2s'
-        }}>
+        <Link href="/auth/register" className="bg-blue-700 text-white no-underline px-4 py-2 rounded-md transition-colors">
           Registrati
         </Link>
       </div>
