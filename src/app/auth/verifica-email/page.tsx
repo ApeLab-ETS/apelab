@@ -1,76 +1,39 @@
 'use client';
 
 import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 
 export default function VerificaEmailPage() {
   return (
-    <div style={{
-      display: 'flex',
-      justifyContent: 'center',
-      alignItems: 'center',
-      minHeight: 'calc(100vh - 4rem)',
-      padding: '2rem'
-    }}>
-      <div style={{
-        width: '100%',
-        maxWidth: '500px',
-        padding: '2rem',
-        borderRadius: '0.5rem',
-        border: '1px solid #e5e7eb',
-        boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
-        textAlign: 'center'
-      }}>
-        <div style={{ fontSize: '4rem', marginBottom: '1rem' }}>
-          ✉️
-        </div>
-        
-        <h1 style={{
-          fontSize: '1.5rem',
-          fontWeight: 'bold',
-          marginBottom: '1rem'
-        }}>Controlla la tua email</h1>
-        
-        <p style={{
-          fontSize: '1rem',
-          color: '#4b5563',
-          marginBottom: '1.5rem'
-        }}>
-          Abbiamo inviato un link di conferma al tuo indirizzo email.
-          Per completare la registrazione, clicca sul link presente nell'email.
-        </p>
-        
-        <p style={{
-          fontSize: '0.875rem',
-          color: '#6b7280',
-          marginBottom: '2rem'
-        }}>
-          Se non hai ricevuto l'email, controlla la cartella spam o 
-          <button style={{
-            background: 'none',
-            border: 'none',
-            padding: 0,
-            color: '#1d4ed8',
-            textDecoration: 'underline',
-            cursor: 'pointer',
-            marginLeft: '0.25rem'
-          }}>
-            richiedi un nuovo link
-          </button>.
-        </p>
-        
-        <Link href="/auth/login" style={{
-          display: 'inline-block',
-          padding: '0.5rem 1rem',
-          backgroundColor: '#1d4ed8',
-          color: 'white',
-          borderRadius: '0.25rem',
-          textDecoration: 'none',
-          fontSize: '0.875rem',
-          fontWeight: '500'
-        }}>
-          Torna alla pagina di login
-        </Link>
-      </div>
+    <div className="flex justify-center items-center min-h-[calc(100vh-4rem)] p-8">
+      <Card className="w-full max-w-lg text-center">
+        <CardHeader>
+          <div className="text-6xl mx-auto mb-4">
+            ✉️
+          </div>
+          <CardTitle>Controlla la tua email</CardTitle>
+          <CardDescription className="text-base">
+            Abbiamo inviato un link di conferma al tuo indirizzo email.
+            <br />Per completare la registrazione, clicca sul link presente nell'email.
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <p className="text-sm text-muted-foreground mb-6">
+            Se non hai ricevuto l'email, controlla la cartella spam o 
+            <Button variant="link" className="text-primary px-1 h-auto">
+              richiedi un nuovo link
+            </Button>.
+          </p>
+        </CardContent>
+        <CardFooter className="flex justify-center">
+          <Button asChild>
+            <Link href="/auth/login">
+              Torna alla pagina di login
+            </Link>
+          </Button>
+        </CardFooter>
+      </Card>
     </div>
   );
 } 

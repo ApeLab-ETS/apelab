@@ -4,6 +4,10 @@ import Link from "next/link";
 import { useState } from "react";
 import { supabaseClient } from "@/lib/supabase/client";
 import { useRouter } from "next/navigation";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
@@ -38,130 +42,66 @@ export default function LoginPage() {
   };
 
   return (
-    <div style={{
-      display: 'flex',
-      justifyContent: 'center',
-      alignItems: 'center',
-      minHeight: 'calc(100vh - 4rem)',
-      padding: '2rem'
-    }}>
-      <div style={{
-        width: '100%',
-        maxWidth: '400px',
-        padding: '2rem',
-        borderRadius: '0.5rem',
-        border: '1px solid #e5e7eb',
-        boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)'
-      }}>
-        <h1 style={{
-          fontSize: '1.5rem',
-          fontWeight: 'bold',
-          marginBottom: '1.5rem',
-          textAlign: 'center'
-        }}>Accedi al tuo account</h1>
-        
-        {error && (
-          <div style={{
-            backgroundColor: '#fee2e2',
-            color: '#b91c1c',
-            padding: '0.75rem',
-            borderRadius: '0.25rem',
-            marginBottom: '1rem',
-            fontSize: '0.875rem'
-          }}>
-            {error}
-          </div>
-        )}
-
-        <form onSubmit={handleLogin} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-            <label htmlFor="email" style={{
-              fontSize: '0.875rem',
-              fontWeight: '500'
-            }}>Email</label>
-            <input
-              id="email"
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="email@esempio.com"
-              style={{
-                padding: '0.5rem',
-                border: '1px solid #d1d5db',
-                borderRadius: '0.25rem',
-                fontSize: '1rem'
-              }}
-              required
-            />
-          </div>
-          
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-              <label htmlFor="password" style={{
-                fontSize: '0.875rem',
-                fontWeight: '500'
-              }}>Password</label>
-              <Link href="/auth/reset-password" style={{
-                fontSize: '0.75rem',
-                color: '#1d4ed8',
-                textDecoration: 'none'
-              }}>
-                Hai dimenticato la password?
-              </Link>
+    <div className="flex justify-center items-center min-h-[calc(100vh-4rem)] p-8">
+      <Card className="w-full max-w-md">
+        <CardHeader>
+          <CardTitle className="text-center">Accedi al tuo account</CardTitle>
+        </CardHeader>
+        <CardContent>
+          {error && (
+            <div className="bg-destructive/15 text-destructive p-3 rounded-md mb-4 text-sm">
+              {error}
             </div>
-            <input
-              id="password"
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              placeholder="••••••••"
-              style={{
-                padding: '0.5rem',
-                border: '1px solid #d1d5db',
-                borderRadius: '0.25rem',
-                fontSize: '1rem'
-              }}
-              required
-            />
-          </div>
-          
-          <button
-            type="submit"
-            disabled={isLoading}
-            style={{
-              marginTop: '1rem',
-              padding: '0.75rem',
-              backgroundColor: isLoading ? '#93c5fd' : '#1d4ed8',
-              color: 'white',
-              border: 'none',
-              borderRadius: '0.25rem',
-              fontSize: '1rem',
-              fontWeight: '500',
-              cursor: isLoading ? 'not-allowed' : 'pointer',
-              transition: 'background-color 0.2s',
-              display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'center'
-            }}
-          >
-            {isLoading ? 'Accesso in corso...' : 'Accedi'}
-          </button>
-        </form>
-        
-        <div style={{
-          marginTop: '1.5rem',
-          textAlign: 'center',
-          fontSize: '0.875rem'
-        }}>
-          Non hai un account?{' '}
-          <Link href="/auth/register" style={{
-            color: '#1d4ed8',
-            textDecoration: 'none'
-          }}>
-            Registrati
-          </Link>
-        </div>
-      </div>
+          )}
+
+          <form onSubmit={handleLogin} className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="email">Email</Label>
+              <Input
+                id="email"
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="email@esempio.com"
+                required
+              />
+            </div>
+            
+            <div className="space-y-2">
+              <div className="flex justify-between items-center">
+                <Label htmlFor="password">Password</Label>
+                <Link href="/auth/reset-password" className="text-xs text-primary hover:underline">
+                  Hai dimenticato la password?
+                </Link>
+              </div>
+              <Input
+                id="password"
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="••••••••"
+                required
+              />
+            </div>
+            
+            <Button
+              type="submit"
+              disabled={isLoading}
+              className="w-full"
+            >
+              {isLoading ? 'Accesso in corso...' : 'Accedi'}
+            </Button>
+          </form>
+        </CardContent>
+        <CardFooter className="flex justify-center">
+          <p className="text-sm text-muted-foreground">
+            Non hai un account?{' '}
+            <Link href="/auth/register" className="text-primary hover:underline">
+              Registrati
+            </Link>
+          </p>
+        </CardFooter>
+      </Card>
     </div>
   );
 } 

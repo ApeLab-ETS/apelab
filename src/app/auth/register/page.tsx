@@ -4,6 +4,11 @@ import Link from "next/link";
 import { useState } from "react";
 import { supabaseClient } from "@/lib/supabase/client";
 import { useRouter } from "next/navigation";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 
 export default function RegisterPage() {
   const [formData, setFormData] = useState({
@@ -24,6 +29,13 @@ export default function RegisterPage() {
     setFormData(prev => ({
       ...prev,
       [name]: type === 'checkbox' ? checked : value
+    }));
+  };
+
+  const handleCheckboxChange = (checked: boolean) => {
+    setFormData(prev => ({
+      ...prev,
+      termsAccepted: checked
     }));
   };
 
@@ -96,246 +108,131 @@ export default function RegisterPage() {
   };
 
   return (
-    <div style={{
-      display: 'flex',
-      justifyContent: 'center',
-      alignItems: 'center',
-      minHeight: 'calc(100vh - 4rem)',
-      padding: '2rem'
-    }}>
-      <div style={{
-        width: '100%',
-        maxWidth: '500px',
-        padding: '2rem',
-        borderRadius: '0.5rem',
-        border: '1px solid #e5e7eb',
-        boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)'
-      }}>
-        <h1 style={{
-          fontSize: '1.5rem',
-          fontWeight: 'bold',
-          marginBottom: '1.5rem',
-          textAlign: 'center'
-        }}>Crea un nuovo account</h1>
-        
-        {error && (
-          <div style={{
-            backgroundColor: '#fee2e2',
-            color: '#b91c1c',
-            padding: '0.75rem',
-            borderRadius: '0.25rem',
-            marginBottom: '1rem',
-            fontSize: '0.875rem'
-          }}>
-            {error}
-          </div>
-        )}
-        
-        <form onSubmit={handleRegister} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-          <div style={{ 
-            display: 'grid', 
-            gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', 
-            gap: '1rem' 
-          }}>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-              <label htmlFor="nome" style={{
-                fontSize: '0.875rem',
-                fontWeight: '500'
-              }}>Nome</label>
-              <input
-                id="nome"
-                name="nome"
-                type="text"
-                value={formData.nome}
+    <div className="flex justify-center items-center min-h-[calc(100vh-4rem)] p-8">
+      <Card className="w-full max-w-2xl">
+        <CardHeader>
+          <CardTitle className="text-center">Crea un nuovo account</CardTitle>
+        </CardHeader>
+        <CardContent>
+          {error && (
+            <div className="bg-destructive/15 text-destructive p-3 rounded-md mb-4 text-sm">
+              {error}
+            </div>
+          )}
+          
+          <form onSubmit={handleRegister} className="space-y-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="nome">Nome</Label>
+                <Input
+                  id="nome"
+                  name="nome"
+                  type="text"
+                  value={formData.nome}
+                  onChange={handleChange}
+                  placeholder="Mario"
+                  required
+                />
+              </div>
+              
+              <div className="space-y-2">
+                <Label htmlFor="cognome">Cognome</Label>
+                <Input
+                  id="cognome"
+                  name="cognome"
+                  type="text"
+                  value={formData.cognome}
+                  onChange={handleChange}
+                  placeholder="Rossi"
+                  required
+                />
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="email">Email</Label>
+              <Input
+                id="email"
+                name="email"
+                type="email"
+                value={formData.email}
                 onChange={handleChange}
-                placeholder="Mario"
-                style={{
-                  padding: '0.5rem',
-                  border: '1px solid #d1d5db',
-                  borderRadius: '0.25rem',
-                  fontSize: '1rem'
-                }}
+                placeholder="email@esempio.com"
                 required
               />
             </div>
             
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-              <label htmlFor="cognome" style={{
-                fontSize: '0.875rem',
-                fontWeight: '500'
-              }}>Cognome</label>
-              <input
-                id="cognome"
-                name="cognome"
-                type="text"
-                value={formData.cognome}
+            <div className="space-y-2">
+              <Label htmlFor="telefono">Telefono</Label>
+              <Input
+                id="telefono"
+                name="telefono"
+                type="tel"
+                value={formData.telefono}
                 onChange={handleChange}
-                placeholder="Rossi"
-                style={{
-                  padding: '0.5rem',
-                  border: '1px solid #d1d5db',
-                  borderRadius: '0.25rem',
-                  fontSize: '1rem'
-                }}
+                placeholder="+39 123 456 7890"
+              />
+            </div>
+            
+            <div className="space-y-2">
+              <Label htmlFor="password">Password</Label>
+              <Input
+                id="password"
+                name="password"
+                type="password"
+                value={formData.password}
+                onChange={handleChange}
+                placeholder="••••••••"
                 required
               />
             </div>
-          </div>
-
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-            <label htmlFor="email" style={{
-              fontSize: '0.875rem',
-              fontWeight: '500'
-            }}>Email</label>
-            <input
-              id="email"
-              name="email"
-              type="email"
-              value={formData.email}
-              onChange={handleChange}
-              placeholder="email@esempio.com"
-              style={{
-                padding: '0.5rem',
-                border: '1px solid #d1d5db',
-                borderRadius: '0.25rem',
-                fontSize: '1rem'
-              }}
-              required
-            />
-          </div>
-          
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-            <label htmlFor="telefono" style={{
-              fontSize: '0.875rem',
-              fontWeight: '500'
-            }}>Telefono</label>
-            <input
-              id="telefono"
-              name="telefono"
-              type="tel"
-              value={formData.telefono}
-              onChange={handleChange}
-              placeholder="+39 123 456 7890"
-              style={{
-                padding: '0.5rem',
-                border: '1px solid #d1d5db',
-                borderRadius: '0.25rem',
-                fontSize: '1rem'
-              }}
-            />
-          </div>
-          
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-            <label htmlFor="password" style={{
-              fontSize: '0.875rem',
-              fontWeight: '500'
-            }}>Password</label>
-            <input
-              id="password"
-              name="password"
-              type="password"
-              value={formData.password}
-              onChange={handleChange}
-              placeholder="••••••••"
-              style={{
-                padding: '0.5rem',
-                border: '1px solid #d1d5db',
-                borderRadius: '0.25rem',
-                fontSize: '1rem'
-              }}
-              required
-            />
-          </div>
-          
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-            <label htmlFor="confirmPassword" style={{
-              fontSize: '0.875rem',
-              fontWeight: '500'
-            }}>Conferma Password</label>
-            <input
-              id="confirmPassword"
-              name="confirmPassword"
-              type="password"
-              value={formData.confirmPassword}
-              onChange={handleChange}
-              placeholder="••••••••"
-              style={{
-                padding: '0.5rem',
-                border: '1px solid #d1d5db',
-                borderRadius: '0.25rem',
-                fontSize: '1rem'
-              }}
-              required
-            />
-          </div>
-          
-          <div style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: '0.5rem',
-            marginTop: '0.5rem'
-          }}>
-            <input
-              id="termsAccepted"
-              name="termsAccepted"
-              type="checkbox"
-              checked={formData.termsAccepted}
-              onChange={handleChange}
-              style={{
-                width: '1rem',
-                height: '1rem'
-              }}
-              required
-            />
-            <label htmlFor="termsAccepted" style={{
-              fontSize: '0.875rem'
-            }}>
-              Accetto i{' '}
-              <Link href="/terms" style={{
-                color: '#1d4ed8',
-                textDecoration: 'none'
-              }}>
-                termini e condizioni
-              </Link>
-            </label>
-          </div>
-          
-          <button
-            type="submit"
-            disabled={isLoading}
-            style={{
-              marginTop: '1rem',
-              padding: '0.75rem',
-              backgroundColor: isLoading ? '#93c5fd' : '#1d4ed8',
-              color: 'white',
-              border: 'none',
-              borderRadius: '0.25rem',
-              fontSize: '1rem',
-              fontWeight: '500',
-              cursor: isLoading ? 'not-allowed' : 'pointer',
-              transition: 'background-color 0.2s',
-              display: 'flex',
-              justifyContent: 'center'
-            }}
-          >
-            {isLoading ? 'Registrazione in corso...' : 'Registrati'}
-          </button>
-        </form>
-        
-        <div style={{
-          marginTop: '1.5rem',
-          textAlign: 'center',
-          fontSize: '0.875rem'
-        }}>
-          Hai già un account?{' '}
-          <Link href="/auth/login" style={{
-            color: '#1d4ed8',
-            textDecoration: 'none'
-          }}>
-            Accedi
-          </Link>
-        </div>
-      </div>
+            
+            <div className="space-y-2">
+              <Label htmlFor="confirmPassword">Conferma Password</Label>
+              <Input
+                id="confirmPassword"
+                name="confirmPassword"
+                type="password"
+                value={formData.confirmPassword}
+                onChange={handleChange}
+                placeholder="••••••••"
+                required
+              />
+            </div>
+            
+            <div className="flex items-center space-x-2 pt-2">
+              <Checkbox 
+                id="termsAccepted" 
+                checked={formData.termsAccepted}
+                onCheckedChange={handleCheckboxChange}
+                required
+              />
+              <Label htmlFor="termsAccepted" className="text-sm font-normal">
+                Accetto i{' '}
+                <Link href="/terms" className="text-primary hover:underline">
+                  termini e condizioni
+                </Link>
+              </Label>
+            </div>
+            
+            <Button
+              type="submit"
+              disabled={isLoading}
+              className="w-full"
+            >
+              {isLoading ? 'Registrazione in corso...' : 'Registrati'}
+            </Button>
+          </form>
+        </CardContent>
+        <CardFooter className="flex justify-center">
+          <p className="text-sm text-muted-foreground">
+            Hai già un account?{' '}
+            <Link href="/auth/login" className="text-primary hover:underline">
+              Accedi
+            </Link>
+          </p>
+        </CardFooter>
+      </Card>
     </div>
   );
 } 
