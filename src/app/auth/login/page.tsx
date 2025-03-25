@@ -22,7 +22,7 @@ export default function LoginPage() {
     setIsLoading(true);
 
     try {
-      const { error } = await supabaseClient.auth.signInWithPassword({
+      const { data, error } = await supabaseClient.auth.signInWithPassword({
         email,
         password
       });
@@ -30,7 +30,18 @@ export default function LoginPage() {
       if (error) {
         setError(error.message);
       } else {
-        router.push('/');
+        // Dopo il login, controlla se l'utente è un super admin
+        const { data: userData } = await supabaseClient.auth.getUser();
+        const user = userData.user;
+        
+        if (user?.app_metadata?.is_super_admin) {
+          // Se l'utente è un admin, reindirizza alla dashboard admin
+          console.log("Utente super admin rilevato, reindirizzamento alla dashboard admin");
+          router.push('/admin/dashboard');
+        } else {
+          // Altrimenti, reindirizza alla home page come prima
+          router.push('/');
+        }
         router.refresh();
       }
     } catch (err) {

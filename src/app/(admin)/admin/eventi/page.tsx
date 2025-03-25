@@ -59,6 +59,36 @@ export default function EventiAdminPage() {
     }
   };
 
+  // Naviga alla pagina di creazione nuovo evento
+  const handleNuovoEvento = () => {
+    router.push('/admin/eventi/nuovo');
+  };
+
+  // Naviga alla pagina di modifica evento
+  const handleModificaEvento = (id: string) => {
+    router.push(`/admin/eventi/modifica/${id}`);
+  };
+
+  // Elimina evento
+  const handleEliminaEvento = async (id: string) => {
+    if (!confirm('Sei sicuro di voler eliminare questo evento?')) return;
+    
+    try {
+      const { error } = await supabaseClient
+        .from('feste')
+        .delete()
+        .eq('id', id);
+        
+      if (error) throw error;
+      
+      // Aggiorna la lista degli eventi
+      fetchEventi();
+    } catch (err: any) {
+      console.error('Errore durante l\'eliminazione dell\'evento:', err);
+      setError('Si è verificato un errore durante l\'eliminazione dell\'evento.');
+    }
+  };
+
   // Filtra gli eventi in base al termine di ricerca
   const filteredEventi = eventi.filter(evento => 
     evento.titolo.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -94,6 +124,12 @@ export default function EventiAdminPage() {
           {error && (
             <div className="mb-4 p-4 bg-red-50 text-red-600 rounded-md">
               {error}
+              <Button 
+                className="ml-2 bg-red-600 hover:bg-red-700 text-white text-xs py-1 px-2 mt-2"
+                onClick={() => setError(null)}
+              >
+                Chiudi
+              </Button>
             </div>
           )}
           
@@ -110,7 +146,10 @@ export default function EventiAdminPage() {
               />
             </div>
             <div>
-              <Button className="w-full md:w-auto bg-orange-500 hover:bg-orange-600">
+              <Button 
+                className="w-full md:w-auto bg-orange-500 hover:bg-orange-600"
+                onClick={handleNuovoEvento}
+              >
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
                 </svg>
@@ -158,12 +197,22 @@ export default function EventiAdminPage() {
                       </td>
                       <td className="p-3">
                         <div className="flex space-x-2">
-                          <Button variant="outline" size="sm" className="h-8 px-2">
+                          <Button 
+                            variant="outline" 
+                            size="sm" 
+                            className="h-8 px-2"
+                            onClick={() => handleModificaEvento(evento.id)}
+                          >
                             <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
                             </svg>
                           </Button>
-                          <Button variant="outline" size="sm" className="h-8 px-2 text-red-500 hover:text-red-700 hover:border-red-300">
+                          <Button 
+                            variant="outline" 
+                            size="sm" 
+                            className="h-8 px-2 text-red-500 hover:text-red-700 hover:border-red-300"
+                            onClick={() => handleEliminaEvento(evento.id)}
+                          >
                             <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                             </svg>
