@@ -1,16 +1,30 @@
 import { createServerClient } from '@supabase/ssr';
 import { cookies } from 'next/headers';
 
-// Creazione del client Supabase lato server per componenti e pagine Server Components
-export function createServerSupabaseClient() {
+type ClientOptions = {
+  useServiceKey?: boolean;
+};
+
+/**
+ * Crea un client Supabase per il server
+ * @param options Opzioni per la creazione del client
+ * @param options.useServiceKey Se true, usa la chiave di servizio invece della chiave anonima
+ * @returns Client Supabase
+ */
+export function createServerSupabaseClient(options: ClientOptions = {}) {
   // In Next.js 15+, cookies() restituisce una Promise che non funziona
   // direttamente con l'API di @supabase/ssr. Usiamo quindi un'implementazione più
   // semplice che evita problemi di tipo.
   const cookieStore = cookies();
   
+  // Decidi quale chiave utilizzare in base alle opzioni
+  const supabaseKey = options.useServiceKey
+    ? process.env.SUPABASE_SERVICE_ROLE_KEY! // Chiave di servizio per operazioni admin
+    : process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!; // Chiave anonima per operazioni standard
+  
   return createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    supabaseKey,
     {
       cookies: {
         get(name) {

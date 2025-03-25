@@ -9,11 +9,6 @@ import { Analytics } from "@vercel/analytics/react";
 
 const inter = Inter({ subsets: ["latin"] });
 
-// Metadata per sostituire completamente il layout principale
-export const metadata = {
-  layout: 'admin',
-};
-
 // Whitelist di email autorizzate come admin
 const ADMIN_EMAILS = [
   'mail@francescomasala.me',
@@ -51,23 +46,34 @@ export default function AdminLayout({
         return;
       }
 
-      // Verifica se l'email dell'utente è nella whitelist
-      const email = session.user.email;
-      if (!email || !ADMIN_EMAILS.includes(email)) {
-        console.log('Non autorizzato - email non in whitelist:', email);
+      // Ottieni l'utente corrente
+      const { data: { user } } = await supabaseClient.auth.getUser();
+      if (!user) {
+        console.log('Utente non trovato nella sessione');
+        router.push('/auth/login?next=' + pathname);
+        return;
+      }
+
+      // Verifica se l'utente è un super admin
+      if (!user.app_metadata?.is_super_admin) {
+        console.log('Accesso negato: l\'utente non è un super admin', {
+          userId: user.id,
+          email: user.email,
+          metadata: user.app_metadata
+        });
         router.push('/');
         return;
       }
 
       // Ottieni nome utente dalle metadata o usa l'email
-      const firstName = session.user.user_metadata?.nome || '';
-      const lastName = session.user.user_metadata?.cognome || '';
+      const firstName = user.user_metadata?.nome || '';
+      const lastName = user.user_metadata?.cognome || '';
       const displayName = firstName && lastName 
         ? `${firstName} ${lastName}` 
-        : email.split('@')[0];
+        : user.email?.split('@')[0] || '';
         
       setUserName(displayName);
-      setUserEmail(email);
+      setUserEmail(user.email || '');
       setIsAdmin(true);
       setLoading(false);
     };
@@ -91,7 +97,7 @@ export default function AdminLayout({
       <body className={`${inter.className} min-h-screen m-0 antialiased`}>
         <div className="min-h-screen flex flex-col">
           {/* Header Admin */}
-          <header className="bg-orange-500 text-white shadow-md">
+          <header className="bg-orange-500 shadow-md">
             <div className="container mx-auto px-4 py-3">
               <div className="flex justify-between items-center">
                 {/* Logo e titolo */}
@@ -154,7 +160,10 @@ export default function AdminLayout({
                   <div className="ml-6 border-l border-orange-400 pl-6 flex items-center">
                     <div className="mr-4">
                       <div className="font-medium text-white">{userName}</div>
-                      <div className="text-xs text-orange-200">{userEmail}</div>
+                      <div className="text-xs text-orange-200">
+                        {userEmail}
+                        <span className="ml-2 px-1.5 py-0.5 bg-red-500 text-white text-[10px] rounded-sm font-medium">ADMIN</span>
+                      </div>
                     </div>
                     <button 
                       onClick={handleLogout}
