@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { supabaseClient } from '@/lib/supabase/client';
 import { 
@@ -23,8 +23,7 @@ type EventoFormData = {
   data_inizio: string;
   data_fine: string;
   location: string;
-  stato: string;
-  prezzo: number;
+  stato: 'pianificata' | 'in_corso' | 'conclusa' | 'annullata';
   immagine_url?: string;
 };
 
@@ -39,12 +38,26 @@ export default function NuovoEventoPage() {
     data_fine: '',
     location: '',
     stato: 'pianificata',
-    prezzo: 0,
     immagine_url: '',
   });
   
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [currentUser, setCurrentUser] = useState<string | null>(null);
+
+  useEffect(() => {
+    // Recupera l'utente corrente all'avvio
+    const fetchCurrentUser = async () => {
+      const { data: { user }, error } = await supabaseClient.auth.getUser();
+      if (user && !error) {
+        setCurrentUser(user.id);
+      } else {
+        console.error('Errore nel recuperare l\'utente:', error);
+      }
+    };
+    
+    fetchCurrentUser();
+  }, []);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
@@ -54,7 +67,7 @@ export default function NuovoEventoPage() {
     }));
   };
 
-  const handleSelectChange = (name: string, value: string) => {
+  const handleSelectChange = (name: string, value: 'pianificata' | 'in_corso' | 'conclusa' | 'annullata') => {
     setFormData(prev => ({
       ...prev,
       [name]: value
@@ -74,20 +87,28 @@ export default function NuovoEventoPage() {
     setSubmitting(true);
     setError(null);
 
+    // Verifica se l'utente è autenticato
+    if (!currentUser) {
+      setError('Devi essere autenticato per creare un evento');
+      setSubmitting(false);
+      return;
+    }
+
     try {
+      // Qui possiamo fare controlli sugli altri campi obbligatori prima di inviare al server
       const { data, error } = await supabaseClient
         .from('feste')
         .insert({
-          titolo: formData.titolo,
+          nome: formData.titolo,
           descrizione: formData.descrizione,
           data_inizio: formData.data_inizio,
-          data_fine: formData.data_fine,
-          location: formData.location,
+          ora_inizio: formData.data_inizio ? new Date(formData.data_inizio).toLocaleTimeString('it-IT') : '',
+          luogo: formData.location,
           stato: formData.stato,
-          prezzo: formData.prezzo,
-          immagine_url: formData.immagine_url,
-          created_at: new Date().toISOString(),
-          updated_at: new Date().toISOString(),
+          immagine_url: formData.immagine_url || '',
+          max_partecipanti: 100, // Valore di default
+          tags: [], // Array vuoto di default
+          creatore_id: currentUser,
         })
         .select();
 
@@ -101,7 +122,8 @@ export default function NuovoEventoPage() {
       router.push('/admin/eventi');
     } catch (err: any) {
       console.error('Errore durante la creazione dell\'evento:', err);
-      setError('Si è verificato un errore durante il salvataggio. Riprova più tardi.');
+      // Mostriamo i dettagli dell'errore per il debug
+      setError(`Si è verificato un errore durante il salvataggio: ${err.message || 'Errore sconosciuto'}. Codice: ${err.code || 'N/A'}`);
     } finally {
       setSubmitting(false);
     }
@@ -173,32 +195,18 @@ export default function NuovoEventoPage() {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="prezzo">Prezzo (€)</Label>
-                <Input
-                  id="prezzo"
-                  name="prezzo"
-                  type="number"
-                  min="0"
-                  step="0.01"
-                  value={formData.prezzo}
-                  onChange={handleNumberChange}
-                  placeholder="0.00"
-                />
-              </div>
-
-              <div className="space-y-2">
                 <Label htmlFor="stato">Stato dell'evento *</Label>
                 <Select 
                   value={formData.stato} 
-                  onValueChange={(value: string) => handleSelectChange('stato', value)}
+                  onValueChange={(value: 'pianificata' | 'in_corso' | 'conclusa' | 'annullata') => handleSelectChange('stato', value)}
                 >
                   <SelectTrigger>
                     <SelectValue placeholder="Seleziona uno stato" />
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="pianificata">Pianificata</SelectItem>
-                    <SelectItem value="in corso">In corso</SelectItem>
-                    <SelectItem value="completata">Completata</SelectItem>
+                    <SelectItem value="in_corso">In corso</SelectItem>
+                    <SelectItem value="conclusa">Conclusa</SelectItem>
                     <SelectItem value="annullata">Annullata</SelectItem>
                   </SelectContent>
                 </Select>
