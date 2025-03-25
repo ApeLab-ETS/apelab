@@ -106,7 +106,7 @@ export default function NuovoEventoPage() {
           luogo: formData.location,
           stato: formData.stato,
           max_partecipanti: formData.max_partecipanti,
-          creatore_id: currentUser ? parseInt(currentUser, 10) || null : null,
+          creatore_id: currentUser,
           created_at: new Date().toISOString(),
           updated_at: new Date().toISOString()
         })
