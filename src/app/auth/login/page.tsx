@@ -37,13 +37,11 @@ export default function LoginPage() {
       
       if (userData?.user?.app_metadata?.is_super_admin) {
         // Reindirizza al pannello admin
-        router.push('/admin');
+        router.push('/admin/');
       } else {
         // Reindirizza alla home per utenti normali
         router.push('/');
       }
-      
-      router.refresh();
     } catch (err) {
       console.error("Errore durante il login:", err);
       setError("Si è verificato un errore durante il login. Riprova più tardi.");
