@@ -155,84 +155,84 @@ export default function AdminDashboardPage() {
   };
 
   return (
-    <div>
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold">Dashboard Admin</h1>
-        <p className="text-muted-foreground mt-2">
+    <div className="p-3 md:p-0">
+      <div className="mb-4 md:mb-8">
+        <h1 className="text-2xl md:text-3xl font-bold">Dashboard Admin</h1>
+        <p className="text-muted-foreground text-sm md:text-base mt-1 md:mt-2">
           Panoramica e statistiche dell'applicazione Apelab
         </p>
       </div>
 
       {error && (
-        <div className="mb-6 p-4 bg-red-50 text-red-600 rounded-md">
+        <div className="mb-6 p-3 md:p-4 bg-red-50 text-red-600 rounded-md text-sm md:text-base">
           {error}
         </div>
       )}
 
       {loading ? (
-        <div className="flex justify-center items-center py-12">
-          <div className="animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-orange-500"></div>
-          <span className="ml-3 text-muted-foreground">Caricamento statistiche...</span>
+        <div className="flex justify-center items-center py-8 md:py-12">
+          <div className="animate-spin rounded-full h-8 w-8 md:h-10 md:w-10 border-t-2 border-b-2 border-orange-500"></div>
+          <span className="ml-3 text-muted-foreground text-sm md:text-base">Caricamento statistiche...</span>
         </div>
       ) : (
         <>
           {/* Statistiche principali */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+          <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-3 md:gap-6 mb-4 md:mb-8">
             <Card>
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium text-muted-foreground">
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 p-3 md:p-6">
+                <CardTitle className="text-xs md:text-sm font-medium text-muted-foreground">
                   Utenti Totali
                 </CardTitle>
-                <Users className="h-4 w-4 text-muted-foreground" />
+                <Users className="h-3 w-3 md:h-4 md:w-4 text-muted-foreground" />
               </CardHeader>
-              <CardContent>
-                <div className="text-3xl font-bold text-orange-500">{stats.totalUsers}</div>
-                <p className="text-xs text-muted-foreground mt-1">
+              <CardContent className="p-3 md:p-6 pt-0 md:pt-0">
+                <div className="text-xl md:text-3xl font-bold text-orange-500">{stats.totalUsers}</div>
+                <p className="text-[10px] md:text-xs text-muted-foreground mt-1">
                   Account registrati sulla piattaforma
                 </p>
               </CardContent>
             </Card>
             
             <Card>
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium text-muted-foreground">
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 p-3 md:p-6">
+                <CardTitle className="text-xs md:text-sm font-medium text-muted-foreground">
                   Eventi Totali
                 </CardTitle>
-                <CalendarDays className="h-4 w-4 text-muted-foreground" />
+                <CalendarDays className="h-3 w-3 md:h-4 md:w-4 text-muted-foreground" />
               </CardHeader>
-              <CardContent>
-                <div className="text-3xl font-bold text-orange-500">{stats.totalEvents}</div>
-                <p className="text-xs text-muted-foreground mt-1">
+              <CardContent className="p-3 md:p-6 pt-0 md:pt-0">
+                <div className="text-xl md:text-3xl font-bold text-orange-500">{stats.totalEvents}</div>
+                <p className="text-[10px] md:text-xs text-muted-foreground mt-1">
                   Feste ed eventi organizzati
                 </p>
               </CardContent>
             </Card>
             
             <Card>
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium text-muted-foreground">
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 p-3 md:p-6">
+                <CardTitle className="text-xs md:text-sm font-medium text-muted-foreground">
                   Eventi in Arrivo
                 </CardTitle>
-                <Calendar className="h-4 w-4 text-muted-foreground" />
+                <Calendar className="h-3 w-3 md:h-4 md:w-4 text-muted-foreground" />
               </CardHeader>
-              <CardContent>
-                <div className="text-3xl font-bold text-orange-500">{stats.upcomingEvents}</div>
-                <p className="text-xs text-muted-foreground mt-1">
+              <CardContent className="p-3 md:p-6 pt-0 md:pt-0">
+                <div className="text-xl md:text-3xl font-bold text-orange-500">{stats.upcomingEvents}</div>
+                <p className="text-[10px] md:text-xs text-muted-foreground mt-1">
                   Pianificati per il futuro
                 </p>
               </CardContent>
             </Card>
             
             <Card>
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium text-muted-foreground">
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 p-3 md:p-6">
+                <CardTitle className="text-xs md:text-sm font-medium text-muted-foreground">
                   Utenti Attivi
                 </CardTitle>
-                <TrendingUp className="h-4 w-4 text-muted-foreground" />
+                <TrendingUp className="h-3 w-3 md:h-4 md:w-4 text-muted-foreground" />
               </CardHeader>
-              <CardContent>
-                <div className="text-3xl font-bold text-orange-500">{stats.activeUsers}</div>
-                <p className="text-xs text-muted-foreground mt-1">
+              <CardContent className="p-3 md:p-6 pt-0 md:pt-0">
+                <div className="text-xl md:text-3xl font-bold text-orange-500">{stats.activeUsers}</div>
+                <p className="text-[10px] md:text-xs text-muted-foreground mt-1">
                   Stima corrente
                 </p>
               </CardContent>
@@ -240,46 +240,90 @@ export default function AdminDashboardPage() {
           </div>
           
           {/* Grafici */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-            {/* Grafico attività */}
-            <ActivityChart />
-            
-            {/* Grafico eventi */}
-            <EventsChart />
-          </div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-            {/* Grafico partecipanti */}
-            <ParticipantsStatusChart />
-            
-            {/* Grafico location */}
-            <EventsLocationChart />
-          </div>
-          
-          {/* Attività recenti e prossimi eventi */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <Card>
-              <CardHeader>
-                <CardTitle>Attività Recenti</CardTitle>
-                <CardDescription>
-                  Le ultime azioni sulla piattaforma
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6 mb-4 md:mb-8">
+            <Card className="col-span-1">
+              <CardHeader className="pb-2 p-3 md:p-6">
+                <CardTitle className="text-sm md:text-base">Attività Utenti</CardTitle>
+                <CardDescription className="text-xs md:text-sm">
+                  Monitoraggio delle attività giornaliere
                 </CardDescription>
               </CardHeader>
-              <CardContent>
-                <div className="space-y-6">
+              <CardContent className="p-0 md:p-0">
+                <div className="h-[200px] md:h-[300px] w-full">
+                  <ActivityChart />
+                </div>
+              </CardContent>
+            </Card>
+            
+            <Card className="col-span-1">
+              <CardHeader className="pb-2 p-3 md:p-6">
+                <CardTitle className="text-sm md:text-base">Eventi Mensili</CardTitle>
+                <CardDescription className="text-xs md:text-sm">
+                  Distribuzione degli eventi negli ultimi 6 mesi
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="p-0 md:p-0">
+                <div className="h-[200px] md:h-[300px] w-full">
+                  <EventsChart />
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+          
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6 mb-4 md:mb-8">
+            <Card className="col-span-1">
+              <CardHeader className="pb-2 p-3 md:p-6">
+                <CardTitle className="text-sm md:text-base">Stato Partecipanti</CardTitle>
+                <CardDescription className="text-xs md:text-sm">
+                  Distribuzione degli stati di partecipazione
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="p-0 md:p-0">
+                <div className="h-[200px] md:h-[300px] w-full">
+                  <ParticipantsStatusChart />
+                </div>
+              </CardContent>
+            </Card>
+            
+            <Card className="col-span-1">
+              <CardHeader className="pb-2 p-3 md:p-6">
+                <CardTitle className="text-sm md:text-base">Posizione Eventi</CardTitle>
+                <CardDescription className="text-xs md:text-sm">
+                  Distribuzione geografica degli eventi
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="p-0 md:p-0">
+                <div className="h-[200px] md:h-[300px] w-full">
+                  <EventsLocationChart />
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+          
+          {/* Sezioni inferiori */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6">
+            {/* Attività recenti */}
+            <Card>
+              <CardHeader className="pb-2 p-3 md:p-6">
+                <CardTitle className="text-sm md:text-base">Attività Recenti</CardTitle>
+                <CardDescription className="text-xs md:text-sm">
+                  Ultime azioni sulla piattaforma
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="p-0">
+                <div className="space-y-0">
                   {recentActivities.map((activity) => (
-                    <div key={activity.id} className="flex items-start space-x-4">
-                      <div className="mt-0.5">
+                    <div 
+                      key={activity.id} 
+                      className="flex items-start space-x-3 p-3 md:p-4 border-b last:border-0"
+                    >
+                      <div className="mt-1 bg-white p-1 md:p-1.5 rounded-full border">
                         {getActivityIcon(activity.type)}
                       </div>
                       <div className="flex-1 space-y-1">
-                        <div className="flex items-center justify-between">
-                          <p className="font-medium">{activity.title}</p>
-                          <span className="text-xs text-muted-foreground">{activity.time}</span>
-                        </div>
-                        <p className="text-sm text-muted-foreground">
-                          {activity.description}
-                        </p>
+                        <p className="text-sm md:text-base font-medium">{activity.title}</p>
+                        <p className="text-xs md:text-sm text-muted-foreground">{activity.description}</p>
+                        <p className="text-[10px] md:text-xs text-gray-400">{activity.time}</p>
                       </div>
                     </div>
                   ))}
@@ -287,27 +331,31 @@ export default function AdminDashboardPage() {
               </CardContent>
             </Card>
             
+            {/* Eventi in arrivo */}
             <Card>
-              <CardHeader>
-                <CardTitle>Prossimi Eventi</CardTitle>
-                <CardDescription>
-                  Gli eventi in programma nei prossimi mesi
+              <CardHeader className="pb-2 p-3 md:p-6">
+                <CardTitle className="text-sm md:text-base">Eventi in Arrivo</CardTitle>
+                <CardDescription className="text-xs md:text-sm">
+                  Prossimi eventi pianificati
                 </CardDescription>
               </CardHeader>
-              <CardContent>
-                <div className="space-y-6">
+              <CardContent className="p-0">
+                <div className="space-y-0">
                   {upcomingEvents.map((event) => (
-                    <div key={event.id} className="flex flex-col space-y-2">
-                      <div className="flex items-center justify-between">
-                        <h4 className="font-medium">{event.title}</h4>
-                        {getStatusBadge(event.status)}
+                    <div 
+                      key={event.id} 
+                      className="flex items-start space-x-3 p-3 md:p-4 border-b last:border-0"
+                    >
+                      <div className="mt-1 bg-white p-1 md:p-1.5 rounded-full border">
+                        <CalendarDays className="h-4 w-4 md:h-5 md:w-5 text-orange-500" />
                       </div>
-                      <div className="flex items-center text-sm text-muted-foreground">
-                        <CalendarDays className="mr-2 h-4 w-4" />
-                        <span>{event.date}</span>
-                      </div>
-                      <div className="text-sm text-muted-foreground">
-                        <span>📍 {event.location}</span>
+                      <div className="flex-1 space-y-1">
+                        <div className="flex flex-wrap items-center justify-between gap-2">
+                          <p className="text-sm md:text-base font-medium">{event.title}</p>
+                          {getStatusBadge(event.status)}
+                        </div>
+                        <p className="text-xs md:text-sm text-muted-foreground">{event.location}</p>
+                        <p className="text-[10px] md:text-xs text-gray-400">{event.date}</p>
                       </div>
                     </div>
                   ))}

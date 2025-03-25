@@ -88,8 +88,8 @@ function AdminContent({ children }: { children: React.ReactNode }) {
       />
       
       {/* Contenuto principale */}
-      <div className="flex-1">
-        <div className="container mx-auto p-6 md:p-8 max-w-7xl">
+      <div className="flex-1 w-full overflow-x-hidden">
+        <div className="container mx-auto px-1 sm:px-4 md:px-6 lg:px-8 max-w-full lg:max-w-7xl">
           {children}
         </div>
       </div>

@@ -115,7 +115,7 @@ export function Sidebar({ userName, userEmail, onLogout }: SidebarProps) {
       </div>
       
       {/* Menu di navigazione */}
-      <nav className="flex-1 px-4 py-6 overflow-y-auto">
+      <nav className="flex-1 px-3 sm:px-4 py-4 sm:py-6 overflow-y-auto">
         <ul className="space-y-1">
           {navItems.map((item, index) => (
             <li key={index}>
@@ -123,7 +123,7 @@ export function Sidebar({ userName, userEmail, onLogout }: SidebarProps) {
                 <div className="mb-2">
                   <button
                     onClick={item.onToggle}
-                    className="w-full flex items-center justify-between p-2 text-sm rounded-md hover:bg-muted transition-colors"
+                    className="w-full flex items-center justify-between p-2 text-xs sm:text-sm rounded-md hover:bg-muted transition-colors"
                   >
                     <div className="flex items-center">
                       {item.icon}
@@ -138,7 +138,7 @@ export function Sidebar({ userName, userEmail, onLogout }: SidebarProps) {
                   </button>
                   
                   {item.expanded && item.items && (
-                    <ul className="mt-1 pl-8 space-y-1">
+                    <ul className="mt-1 pl-6 sm:pl-8 space-y-1">
                       {item.items.map((subItem, subIndex) => (
                         <li key={subIndex}>
                           <Link
@@ -233,19 +233,27 @@ export function Sidebar({ userName, userEmail, onLogout }: SidebarProps) {
   
   return (
     <>
-      {/* Versione mobile (drawer) */}
-      <div className="lg:hidden absolute left-4 top-4 z-30">
+      {/* Mobile header bar */}
+      <header className="lg:hidden fixed top-0 left-0 right-0 h-14 bg-white border-b z-20 flex items-center px-4">
         <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
           <SheetTrigger asChild>
-            <Button variant="outline" size="icon" className="bg-white">
+            <Button variant="outline" size="icon" className="mr-3">
               <Menu className="h-5 w-5" />
             </Button>
           </SheetTrigger>
-          <SheetContent side="left" className="p-0 w-72">
+          <SheetContent side="left" className="p-0 w-64 sm:w-72">
             <SidebarContent />
           </SheetContent>
         </Sheet>
-      </div>
+        
+        <div className="flex items-center">
+          <span className="bg-orange-500 text-white p-1 sm:p-1.5 rounded-lg mr-2 text-base sm:text-lg font-bold">A</span>
+          <span className="font-bold text-sm sm:text-base">Apelab Admin</span>
+        </div>
+      </header>
+      
+      {/* Padding spacer for mobile content to account for the header */}
+      <div className="lg:hidden h-14"></div>
       
       {/* Versione desktop (sidebar fissa) */}
       <div className="hidden lg:block w-64 border-r bg-card h-screen sticky top-0 overflow-y-auto">
