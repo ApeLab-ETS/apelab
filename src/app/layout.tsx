@@ -6,8 +6,8 @@ import Navbar from "@/components/Navbar";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Gestione Feste",
-  description: "Applicazione per la gestione di feste ed eventi",
+  title: "Apelab - Eventi a Bolzano",
+  description: "Le feste più vibranti di Bolzano, con DJ incredibili, aperitivi esclusivi e la miglior atmosfera per il pubblico giovane",
 };
 
 export default function RootLayout({
@@ -17,7 +17,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="it" suppressHydrationWarning>
-      <body className={`${inter.className} min-h-screen m-0`}>
+      <body className={`${inter.className} min-h-screen m-0 antialiased`}>
         <div className="flex flex-col min-h-screen">
           <Navbar />
           <main className="flex-1">

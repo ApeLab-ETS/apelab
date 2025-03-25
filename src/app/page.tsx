@@ -5,10 +5,12 @@ export default function Home() {
     <div className="min-h-screen bg-gradient-to-b from-white to-orange-50">
       {/* Banner evento in primo piano */}
       <div className="bg-gradient-to-r from-orange-500 to-orange-600 text-white py-3 px-4 text-center">
-        <p className="font-medium">🎉 Prossimo evento: <span className="font-bold">Summer Vibes Party</span> - 15 Luglio 2024</p>
+        <div className="container mx-auto">
+          <p className="font-medium">🎉 Prossimo evento: <span className="font-bold">Summer Vibes Party</span> - 15 Luglio 2024</p>
+        </div>
       </div>
       
-      <header className="container mx-auto px-4 py-16 md:py-20">
+      <header className="container mx-auto px-4 py-12 md:py-16 lg:py-20">
         {/* Hero section con CTA */}
         <div className="max-w-3xl mx-auto text-center mb-16">
           <h1 className="text-4xl md:text-6xl font-extrabold text-slate-900 mb-6">
@@ -70,7 +72,7 @@ export default function Home() {
         </div>
       </header>
 
-      <main className="container mx-auto px-4 py-16">
+      <main className="container mx-auto px-4 py-12 md:py-16">
         {/* I nostri eventi */}
         <div className="max-w-6xl mx-auto mb-20">
           <h2 className="text-3xl font-bold text-center mb-12 text-slate-900">
