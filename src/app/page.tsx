@@ -4,9 +4,9 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-white to-orange-50">
       {/* Banner evento in primo piano */}
-      <div className="bg-gradient-to-r from-orange-500 to-orange-600 text-white py-3 px-4 text-center">
-        <div className="container mx-auto">
-          <p className="font-medium">🎉 Prossimo evento: <span className="font-bold">Summer Vibes Party</span> - 15 Luglio 2024</p>
+      <div className="bg-gradient-to-r from-orange-500 to-orange-600 text-white py-3 text-center">
+        <div className="container mx-auto px-4 flex justify-center items-center">
+          <p className="font-medium inline-block">🎉 Prossimo evento: <span className="font-bold">Summer Vibes Party</span> - 15 Luglio 2024</p>
         </div>
       </div>
       
@@ -41,12 +41,14 @@ export default function Home() {
           <div className="flex flex-col md:flex-row">
             <div className="md:w-2/5 bg-orange-500">
               <div className="h-64 md:h-full bg-orange-500 bg-opacity-90 flex items-center justify-center p-8">
-                <div className="text-center text-white">
+                <div className="text-center text-white w-full">
                   <div className="text-5xl mb-2">🎧</div>
                   <h3 className="text-2xl font-bold mb-1">15 Luglio</h3>
                   <p className="text-lg font-medium">ore 21:00</p>
-                  <div className="mt-6 bg-white bg-opacity-20 rounded-full py-2 px-4 inline-block">
-                    <p className="text-sm font-semibold">Bolzano, Centrum</p>
+                  <div className="flex justify-center w-full mt-6">
+                    <div className="bg-white bg-opacity-20 rounded-full py-2 px-6 inline-block text-center w-auto">
+                      <p className="text-sm font-semibold">Bolzano, Centrum</p>
+                    </div>
                   </div>
                 </div>
               </div>
