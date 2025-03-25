@@ -2,7 +2,10 @@
 
 import { useState, useEffect } from 'react';
 import { supabaseClient } from '@/lib/supabase/client';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { ActivityChart, EventsChart, ParticipantsStatusChart, EventsLocationChart } from '@/components/admin/AdminCharts';
+import { Badge } from '@/components/ui/badge';
+import { CalendarDays, Users, Calendar, TrendingUp, Bell } from 'lucide-react';
 
 export default function AdminDashboardPage() {
   const [stats, setStats] = useState({
@@ -74,12 +77,90 @@ export default function AdminDashboardPage() {
 
     fetchStats();
   }, []);
+  
+  // Esempio di attività recenti
+  const recentActivities = [
+    {
+      id: 1,
+      type: 'user',
+      title: 'Nuovo utente registrato',
+      description: 'Marco Rossi si è unito alla piattaforma',
+      time: '2 ore fa',
+    },
+    {
+      id: 2,
+      type: 'event',
+      title: 'Evento creato',
+      description: 'Nuovo evento: Beach Party - 20 Agosto',
+      time: 'ieri',
+    },
+    {
+      id: 3,
+      type: 'system',
+      title: 'Modifica configurazione',
+      description: 'Sistema aggiornato alla gestione admin basata su whitelist',
+      time: 'oggi',
+    },
+  ];
+  
+  // Esempio di prossimi eventi
+  const upcomingEvents = [
+    {
+      id: 1,
+      title: 'Summer Vibes Party',
+      date: '15 Luglio 2024',
+      location: 'Bolzano, Centrum',
+      status: 'in_arrivo',
+    },
+    {
+      id: 2,
+      title: 'Beach Party',
+      date: '20 Agosto 2024',
+      location: 'Lago di Caldaro',
+      status: 'pianificato',
+    },
+    {
+      id: 3,
+      title: 'Autumn Fest',
+      date: '15 Settembre 2024',
+      location: 'Bolzano, Centro',
+      status: 'pianificato',
+    },
+  ];
+  
+  const getActivityIcon = (type: string) => {
+    switch (type) {
+      case 'user':
+        return <Users className="h-5 w-5 text-blue-500" />;
+      case 'event':
+        return <Calendar className="h-5 w-5 text-orange-500" />;
+      case 'system':
+        return <TrendingUp className="h-5 w-5 text-purple-500" />;
+      default:
+        return <Bell className="h-5 w-5 text-gray-500" />;
+    }
+  };
+  
+  const getStatusBadge = (status: string) => {
+    switch (status) {
+      case 'in_arrivo':
+        return <Badge className="bg-orange-100 text-orange-800 hover:bg-orange-200">In arrivo</Badge>;
+      case 'pianificato':
+        return <Badge className="bg-blue-100 text-blue-800 hover:bg-blue-200">Pianificato</Badge>;
+      case 'concluso':
+        return <Badge className="bg-gray-100 text-gray-800 hover:bg-gray-200">Concluso</Badge>;
+      default:
+        return <Badge variant="outline">{status}</Badge>;
+    }
+  };
 
   return (
-    <div className="container mx-auto py-10 px-4">
+    <div>
       <div className="mb-8">
         <h1 className="text-3xl font-bold">Dashboard Admin</h1>
-        <p className="text-gray-600 mt-2">Panoramica e statistiche dell'applicazione</p>
+        <p className="text-muted-foreground mt-2">
+          Panoramica e statistiche dell'applicazione Apelab
+        </p>
       </div>
 
       {error && (
@@ -89,132 +170,153 @@ export default function AdminDashboardPage() {
       )}
 
       {loading ? (
-        <div className="text-center py-12">Caricamento statistiche...</div>
-      ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
-          <Card>
-            <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium text-gray-500">Utenti Totali</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-3xl font-bold text-orange-500">{stats.totalUsers}</div>
-              <p className="text-sm text-gray-600 mt-1">Account registrati</p>
-            </CardContent>
-          </Card>
-          
-          <Card>
-            <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium text-gray-500">Eventi Totali</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-3xl font-bold text-orange-500">{stats.totalEvents}</div>
-              <p className="text-sm text-gray-600 mt-1">Feste ed eventi organizzati</p>
-            </CardContent>
-          </Card>
-          
-          <Card>
-            <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium text-gray-500">Eventi in Arrivo</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-3xl font-bold text-orange-500">{stats.upcomingEvents}</div>
-              <p className="text-sm text-gray-600 mt-1">Pianificati per il futuro</p>
-            </CardContent>
-          </Card>
-          
-          <Card>
-            <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium text-gray-500">Utenti Attivi</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-3xl font-bold text-orange-500">{stats.activeUsers}</div>
-              <p className="text-sm text-gray-600 mt-1">Stima corrente</p>
-            </CardContent>
-          </Card>
+        <div className="flex justify-center items-center py-12">
+          <div className="animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-orange-500"></div>
+          <span className="ml-3 text-muted-foreground">Caricamento statistiche...</span>
         </div>
+      ) : (
+        <>
+          {/* Statistiche principali */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+            <Card>
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium text-muted-foreground">
+                  Utenti Totali
+                </CardTitle>
+                <Users className="h-4 w-4 text-muted-foreground" />
+              </CardHeader>
+              <CardContent>
+                <div className="text-3xl font-bold text-orange-500">{stats.totalUsers}</div>
+                <p className="text-xs text-muted-foreground mt-1">
+                  Account registrati sulla piattaforma
+                </p>
+              </CardContent>
+            </Card>
+            
+            <Card>
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium text-muted-foreground">
+                  Eventi Totali
+                </CardTitle>
+                <CalendarDays className="h-4 w-4 text-muted-foreground" />
+              </CardHeader>
+              <CardContent>
+                <div className="text-3xl font-bold text-orange-500">{stats.totalEvents}</div>
+                <p className="text-xs text-muted-foreground mt-1">
+                  Feste ed eventi organizzati
+                </p>
+              </CardContent>
+            </Card>
+            
+            <Card>
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium text-muted-foreground">
+                  Eventi in Arrivo
+                </CardTitle>
+                <Calendar className="h-4 w-4 text-muted-foreground" />
+              </CardHeader>
+              <CardContent>
+                <div className="text-3xl font-bold text-orange-500">{stats.upcomingEvents}</div>
+                <p className="text-xs text-muted-foreground mt-1">
+                  Pianificati per il futuro
+                </p>
+              </CardContent>
+            </Card>
+            
+            <Card>
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium text-muted-foreground">
+                  Utenti Attivi
+                </CardTitle>
+                <TrendingUp className="h-4 w-4 text-muted-foreground" />
+              </CardHeader>
+              <CardContent>
+                <div className="text-3xl font-bold text-orange-500">{stats.activeUsers}</div>
+                <p className="text-xs text-muted-foreground mt-1">
+                  Stima corrente
+                </p>
+              </CardContent>
+            </Card>
+          </div>
+          
+          {/* Grafici */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+            {/* Grafico attività */}
+            <ActivityChart />
+            
+            {/* Grafico eventi */}
+            <EventsChart />
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+            {/* Grafico partecipanti */}
+            <ParticipantsStatusChart />
+            
+            {/* Grafico location */}
+            <EventsLocationChart />
+          </div>
+          
+          {/* Attività recenti e prossimi eventi */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <Card>
+              <CardHeader>
+                <CardTitle>Attività Recenti</CardTitle>
+                <CardDescription>
+                  Le ultime azioni sulla piattaforma
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-6">
+                  {recentActivities.map((activity) => (
+                    <div key={activity.id} className="flex items-start space-x-4">
+                      <div className="mt-0.5">
+                        {getActivityIcon(activity.type)}
+                      </div>
+                      <div className="flex-1 space-y-1">
+                        <div className="flex items-center justify-between">
+                          <p className="font-medium">{activity.title}</p>
+                          <span className="text-xs text-muted-foreground">{activity.time}</span>
+                        </div>
+                        <p className="text-sm text-muted-foreground">
+                          {activity.description}
+                        </p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+            
+            <Card>
+              <CardHeader>
+                <CardTitle>Prossimi Eventi</CardTitle>
+                <CardDescription>
+                  Gli eventi in programma nei prossimi mesi
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-6">
+                  {upcomingEvents.map((event) => (
+                    <div key={event.id} className="flex flex-col space-y-2">
+                      <div className="flex items-center justify-between">
+                        <h4 className="font-medium">{event.title}</h4>
+                        {getStatusBadge(event.status)}
+                      </div>
+                      <div className="flex items-center text-sm text-muted-foreground">
+                        <CalendarDays className="mr-2 h-4 w-4" />
+                        <span>{event.date}</span>
+                      </div>
+                      <div className="text-sm text-muted-foreground">
+                        <span>📍 {event.location}</span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        </>
       )}
-
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <Card>
-          <CardHeader>
-            <CardTitle>Attività Recenti</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              <div className="border-b pb-3">
-                <div className="flex justify-between items-start">
-                  <div>
-                    <h4 className="font-medium">Nuovo utente registrato</h4>
-                    <p className="text-sm text-gray-600">Marco Rossi si è unito alla piattaforma</p>
-                  </div>
-                  <div className="text-sm text-gray-500">2 ore fa</div>
-                </div>
-              </div>
-              <div className="border-b pb-3">
-                <div className="flex justify-between items-start">
-                  <div>
-                    <h4 className="font-medium">Evento creato</h4>
-                    <p className="text-sm text-gray-600">Nuovo evento: Beach Party - 20 Agosto</p>
-                  </div>
-                  <div className="text-sm text-gray-500">ieri</div>
-                </div>
-              </div>
-              <div className="border-b pb-3">
-                <div className="flex justify-between items-start">
-                  <div>
-                    <h4 className="font-medium">Modifica configurazione</h4>
-                    <p className="text-sm text-gray-600">Sistema aggiornato alla gestione admin basata su whitelist</p>
-                  </div>
-                  <div className="text-sm text-gray-500">oggi</div>
-                </div>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-        
-        <Card>
-          <CardHeader>
-            <CardTitle>Prossime Attività</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              <div className="border-b pb-3">
-                <div className="flex justify-between items-start">
-                  <div>
-                    <h4 className="font-medium">Summer Vibes Party</h4>
-                    <p className="text-sm text-gray-600">15 Luglio 2024 - Bolzano, Centrum</p>
-                  </div>
-                  <div className="bg-orange-100 text-orange-800 text-xs px-2 py-1 rounded-full">
-                    In arrivo
-                  </div>
-                </div>
-              </div>
-              <div className="border-b pb-3">
-                <div className="flex justify-between items-start">
-                  <div>
-                    <h4 className="font-medium">Beach Party</h4>
-                    <p className="text-sm text-gray-600">20 Agosto 2024 - Lago di Caldaro</p>
-                  </div>
-                  <div className="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded-full">
-                    Pianificato
-                  </div>
-                </div>
-              </div>
-              <div className="border-b pb-3">
-                <div className="flex justify-between items-start">
-                  <div>
-                    <h4 className="font-medium">Autumn Fest</h4>
-                    <p className="text-sm text-gray-600">15 Settembre 2024 - Bolzano, Centro</p>
-                  </div>
-                  <div className="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded-full">
-                    Pianificato
-                  </div>
-                </div>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
     </div>
   );
 } 
