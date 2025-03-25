@@ -6,6 +6,7 @@ import { title } from "@/components/primitives";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { User } from '@supabase/supabase-js';
+import { useRouter } from "next/navigation";
 import { 
   CheckCircle2, 
   XCircle,
@@ -39,10 +40,26 @@ export default function AdminApprovazioniPage() {
   const [processingUsers, setProcessingUsers] = useState<Record<string, boolean>>({});
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const supabase = createClientComponentClient();
+  const router = useRouter();
 
   useEffect(() => {
-    fetchUsers();
-  }, []);
+    const checkSessionAndFetchUsers = async () => {
+      // Verifica della sessione all'avvio della pagina
+      const { data: { session } } = await supabase.auth.getSession();
+      
+      if (!session) {
+        // Reindirizza alla pagina di login con il percorso corrente come next
+        const currentPath = window.location.pathname;
+        router.push(`/auth/login?next=${currentPath}`);
+        return;
+      }
+      
+      // Se la sessione è valida, carica gli utenti
+      fetchUsers();
+    };
+    
+    checkSessionAndFetchUsers();
+  }, [router, supabase]);
 
   async function fetchUsers() {
     try {
@@ -50,15 +67,13 @@ export default function AdminApprovazioniPage() {
       setError(null);
       setSuccessMessage(null);
       
-      // Verifica sessione
-      const { data: { session } } = await supabase.auth.getSession();
+      const response = await fetch("/api/admin/users");
       
-      if (!session) {
-        setError('Sessione non trovata. Effettua il login.');
+      if (response.status === 401) {
+        setError('Sessione non trovata. Effettua il login per accedere a questa pagina.');
+        setIsLoading(false);
         return;
       }
-      
-      const response = await fetch("/api/admin/users");
       
       if (!response.ok) {
         const errorData = await response.json();
@@ -203,12 +218,24 @@ export default function AdminApprovazioniPage() {
         <div className="mb-6 p-4 bg-red-50 text-red-600 rounded-md border border-red-200">
           <p className="font-medium">Si è verificato un errore:</p>
           <p>{error}</p>
-          <Button 
-            className="mt-2 bg-red-600 hover:bg-red-700 text-white" 
-            onClick={fetchUsers}
-          >
-            Riprova
-          </Button>
+          {error.includes('Sessione non trovata') ? (
+            <Button 
+              className="mt-2 bg-blue-600 hover:bg-blue-700 text-white" 
+              onClick={() => {
+                const currentPath = window.location.pathname;
+                router.push(`/auth/login?next=${currentPath}`);
+              }}
+            >
+              Vai alla pagina di login
+            </Button>
+          ) : (
+            <Button 
+              className="mt-2 bg-red-600 hover:bg-red-700 text-white" 
+              onClick={fetchUsers}
+            >
+              Riprova
+            </Button>
+          )}
         </div>
       )}
 
