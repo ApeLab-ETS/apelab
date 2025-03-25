@@ -1,36 +1,79 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Applicazione Gestione Feste
 
-## Getting Started
+Un'applicazione completa per la gestione di feste ed eventi. Permette di creare, organizzare e partecipare a feste, con funzionalità di notifica, gestione partecipanti e molto altro.
 
-First, run the development server:
+## Stack Tecnologico
 
+- **Frontend**: Next.js 14 con TypeScript
+- **Backend**: Supabase
+- **State Management**: Zustand
+- **Styling**: Tailwind CSS
+- **Componenti UI**: Shadcn/UI
+
+## Funzionalità Principali
+
+- Autenticazione completa (login, registrazione, recupero password)
+- Gestione profilo utente
+- Creazione e gestione feste
+- Sistema di partecipazione agli eventi
+- Notifiche per inviti e aggiornamenti
+- Dashboard amministrativa
+- Funzionalità aggiuntive (calendario, QR code, condivisione social)
+
+## Installazione
+
+1. Clona il repository:
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+git clone [repository-url]
+cd applicazione-gestione-feste
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+2. Installa le dipendenze:
+```bash
+npm install
+```
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+3. Configura le variabili d'ambiente:
+```bash
+cp .env.local.example .env.local
+```
+Poi modifica il file `.env.local` con le tue credenziali Supabase.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+4. Avvia il server di sviluppo:
+```bash
+npm run dev
+```
 
-## Learn More
+## Struttura del Database
 
-To learn more about Next.js, take a look at the following resources:
+L'applicazione utilizza Supabase come backend e database con le seguenti tabelle:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- **Profili**: Gestione utenti e ruoli
+- **Feste**: Informazioni sugli eventi
+- **Partecipazioni**: Gestione partecipanti
+- **Notifiche**: Sistema di notifiche
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Sviluppo
 
-## Deploy on Vercel
+Per contribuire al progetto:
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+1. Crea un branch per la tua feature:
+```bash
+git checkout -b feature/nome-feature
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+2. Fai le modifiche e committa:
+```bash
+git commit -m "Descrizione delle modifiche"
+```
+
+3. Pusha il branch:
+```bash
+git push origin feature/nome-feature
+```
+
+4. Apri una Pull Request
+
+## Licenza
+
+[MIT](LICENSE)
