@@ -49,8 +49,12 @@
   }
 }
 
-@layer base {
-  body {
-    @apply bg-white dark:bg-gray-950 text-gray-900 dark:text-gray-50;
-  }
+body {
+  background-color: white;
+  color: #111827;
+}
+
+.dark body {
+  background-color: #030712;
+  color: #f9fafb;
 }
