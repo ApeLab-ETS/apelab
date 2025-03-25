@@ -136,17 +136,6 @@ export default function LoginPage() {
                 Registrati
               </Link>
             </p>
-            <div className="flex items-center justify-center space-x-4">
-              <div className="w-7 h-7 sm:w-8 sm:h-8 bg-orange-100 text-orange-500 rounded-full flex items-center justify-center text-base sm:text-lg">
-                🎵
-              </div>
-              <div className="w-7 h-7 sm:w-8 sm:h-8 bg-orange-100 text-orange-500 rounded-full flex items-center justify-center text-base sm:text-lg">
-                🍹
-              </div>
-              <div className="w-7 h-7 sm:w-8 sm:h-8 bg-orange-100 text-orange-500 rounded-full flex items-center justify-center text-base sm:text-lg">
-                🎉
-              </div>
-            </div>
           </CardFooter>
         </Card>
       </div>
