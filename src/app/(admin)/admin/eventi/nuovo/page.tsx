@@ -24,7 +24,7 @@ type EventoFormData = {
   data_fine: string;
   location: string;
   stato: 'pianificata' | 'in_corso' | 'conclusa' | 'annullata';
-  immagine_url?: string;
+  max_partecipanti: number;
 };
 
 export default function NuovoEventoPage() {
@@ -38,7 +38,7 @@ export default function NuovoEventoPage() {
     data_fine: '',
     location: '',
     stato: 'pianificata',
-    immagine_url: '',
+    max_partecipanti: 100,
   });
   
   const [submitting, setSubmitting] = useState(false);
@@ -102,13 +102,13 @@ export default function NuovoEventoPage() {
           nome: formData.titolo,
           descrizione: formData.descrizione,
           data_inizio: formData.data_inizio,
-          ora_inizio: formData.data_inizio ? new Date(formData.data_inizio).toLocaleTimeString('it-IT') : '',
+          data_fine: formData.data_fine || null,
           luogo: formData.location,
           stato: formData.stato,
-          immagine_url: formData.immagine_url || '',
-          max_partecipanti: 100, // Valore di default
-          tags: [], // Array vuoto di default
-          creatore_id: currentUser,
+          max_partecipanti: formData.max_partecipanti,
+          creatore_id: currentUser ? parseInt(currentUser, 10) || null : null,
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString()
         })
         .select();
 
@@ -213,13 +213,14 @@ export default function NuovoEventoPage() {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="immagine_url">URL Immagine</Label>
+                <Label htmlFor="max_partecipanti">Max Partecipanti</Label>
                 <Input
-                  id="immagine_url"
-                  name="immagine_url"
-                  value={formData.immagine_url || ''}
-                  onChange={handleChange}
-                  placeholder="https://esempio.com/immagine.jpg"
+                  id="max_partecipanti"
+                  name="max_partecipanti"
+                  type="number"
+                  value={formData.max_partecipanti}
+                  onChange={handleNumberChange}
+                  required
                 />
               </div>
             </div>
